@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研立项评审"
+  short_description: "多角色评审研究问题的价值与可行性"
+  default_prompt: "Use $research-review-board to evaluate my evidence-backed research question before design."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,49 @@
+schema_version: "0.1"
+project_id: ai-information-behavior
+profile: zh-undergrad-information-management-empirical
+title: 生成式 AI 使用与大学生信息搜寻行为
+current_state: intake_confirmed
+writer_mode: single_user_serial
+write_sequence: 1
+security:
+  sensitive_data_model_access: forbidden_by_default
+  external_submission: forbidden
+  raw_data_policy: register_only
+providers:
+  - id: openalex-metadata
+    kind: metadata
+    status: not_configured
+state_history:
+  - sequence: 0
+    state: intake_draft
+    at: "2026-09-10T08:00:00Z"
+    changed_by: user
+    reason: 创建本地科研项目
+  - sequence: 1
+    state: intake_confirmed
+    at: "2026-09-10T08:30:00Z"
+    changed_by: user
+    reason: 用户确认科研背景与论文约束
+user_overrides: []
+artifact_index:
+  - id: context-brief-001
+    type: context_brief
+    path: artifacts/context-brief-001.yaml
+    version: 1
+    status: confirmed
+    created_at: "2026-09-10T08:20:00Z"
+    created_by: skill
+    depends_on: []
+    supersedes: null
+    change_reason: 初次依据用户访谈生成，等待并已获得用户确认
+  - id: raw-register-001
+    type: raw_data_register
+    path: artifacts/raw-register-001.yaml
+    version: 1
+    status: draft
+    created_at: "2026-09-10T08:25:00Z"
+    created_by: user
+    depends_on: [context-brief-001]
+    supersedes: null
+    change_reason: 登记未来问卷原始数据的受限存储位置，不读取内容
+

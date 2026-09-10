@@ -1,0 +1,6 @@
+interface:
+  display_name: "研究设计"
+  short_description: "将已评审研究问题转为社科实证方案"
+  default_prompt: "Use $research-design to create a traceable empirical Research Protocol for my approved question."
+policy:
+  allow_implicit_invocation: false

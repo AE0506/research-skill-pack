@@ -1,0 +1,6 @@
+interface:
+  display_name: "Reviewer Simulator"
+  short_description: "用多角色模拟审稿生成可追溯返修任务"
+  default_prompt: "Use $reviewer-simulator to run an evidence-aware simulated review of my audited manuscript."
+policy:
+  allow_implicit_invocation: false

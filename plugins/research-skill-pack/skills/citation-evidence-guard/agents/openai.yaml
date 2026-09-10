@@ -1,0 +1,6 @@
+interface:
+  display_name: "Citation Evidence Guard"
+  short_description: "逐项审计论文主张、引文与证据范围"
+  default_prompt: "Use $citation-evidence-guard to audit claim-to-citation integrity in my local manuscript."
+policy:
+  allow_implicit_invocation: false

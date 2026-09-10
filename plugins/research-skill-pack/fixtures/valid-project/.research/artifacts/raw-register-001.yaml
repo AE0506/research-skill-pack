@@ -1,0 +1,20 @@
+schema_version: "0.1"
+id: raw-register-001
+type: raw_data_register
+version: 1
+created_at: "2026-09-10T08:25:00Z"
+created_by: user
+status: draft
+depends_on: [context-brief-001]
+supersedes: null
+change_reason: 登记未来问卷原始数据的受限存储位置，不读取内容
+provenance: user_supplied
+verification_status: unreviewed
+manuscript_eligibility: not_eligible
+raw_data:
+  path: ../private-survey-data/ai-search-survey.csv
+  sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+  access: project_owner_only
+  truthfulness_declaration: 数据将在真实收集后登记；本项目不生成或修改原始记录。
+  model_access: forbidden_by_default
+

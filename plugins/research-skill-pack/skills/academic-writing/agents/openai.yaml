@@ -1,0 +1,6 @@
+interface:
+  display_name: "Academic Writing"
+  short_description: "从论文蓝图和已核验证据起草指定章节"
+  default_prompt: "Use $academic-writing to draft the selected section of my evidence-linked manuscript blueprint."
+policy:
+  allow_implicit_invocation: false

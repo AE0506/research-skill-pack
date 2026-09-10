@@ -1,0 +1,20 @@
+{
+  "name": "research-local",
+  "interface": {
+    "displayName": "Research Local"
+  },
+  "plugins": [
+    {
+      "name": "research-skill-pack",
+      "source": {
+        "source": "local",
+        "path": "./plugins/research-skill-pack"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

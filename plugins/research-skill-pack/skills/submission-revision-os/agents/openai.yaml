@@ -1,0 +1,6 @@
+interface:
+  display_name: "Submission Revision OS"
+  short_description: "管理本地投稿准备、返修链路与科研归档"
+  default_prompt: "Use $submission-revision-os to prepare a local, user-confirmed submission and revision package."
+policy:
+  allow_implicit_invocation: false

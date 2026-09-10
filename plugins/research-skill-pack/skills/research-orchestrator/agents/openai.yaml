@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研项目路由器"
+  short_description: "Route a local research project safely"
+  default_prompt: "Use $research-orchestrator to start or continue my local research project."
+policy:
+  allow_implicit_invocation: true
