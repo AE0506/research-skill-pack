@@ -342,7 +342,6 @@ flowchart TB
     class drift,approval decision
     class rebaseline action
 ```
-```
 
 Timeline OS 包含时间信息采集、截止梯生成、真实容量评估、选题前 Baseline、执行计划、依赖/关键路径分析、周行动计划、下一步导航、偏移监测、重排方案与提交就绪检查。
 
