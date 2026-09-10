@@ -11,7 +11,7 @@
     <text x="1228" y="213" font-size="24" font-weight="700" fill="#713f12">审计通过？</text><text x="1475" y="222" font-size="23" font-weight="700" fill="#14532d">归档</text>
     <g font-size="17" fill="#475569"><text x="148" y="258">导师 · 能力 · 时间</text><text x="418" y="258">机会 · 空白 · 风险</text><text x="688" y="258">文献 · 设计 · 数据</text><text x="958" y="258">主张 · 图表 · 章节</text><text x="1228" y="250">返修 / 就绪</text><text x="1475" y="258">项目档案</text></g>
   </g>
-  <g stroke="#64748b" stroke-width="4" fill="none"><path d="M250 232H300"/><path d="M520 232H570"/><path d="M790 232H840"/><path d="M1060 232H1110"/><path d="M1330 232H1380"/></g>
-  <g fill="#64748b"><path d="M300 222l20 10-20 10z"/><path d="M570 222l20 10-20 10z"/><path d="M840 222l20 10-20 10z"/><path d="M1110 222l20 10-20 10z"/><path d="M1380 222l20 10-20 10z"/></g>
-  <path d="M1228 295v62H958v-47" fill="none" stroke="#ca8a04" stroke-width="3" stroke-dasharray="8 8"/><text x="1090" y="385" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="18" fill="#854d0e">未通过时回到论证与写作</text>
+  <g stroke="#64748b" stroke-width="4" fill="none"><path d="M250 232H295"/><path d="M520 232H565"/><path d="M790 232H835"/><path d="M1060 232H1105"/><path d="M1330 232H1375"/></g>
+  <g fill="#64748b"><path d="M295 222l20 10-20 10z"/><path d="M565 222l20 10-20 10z"/><path d="M835 222l20 10-20 10z"/><path d="M1105 222l20 10-20 10z"/><path d="M1375 222l20 10-20 10z"/></g>
+  <path d="M1228 295V345H958V308" fill="none" stroke="#ca8a04" stroke-width="3" stroke-dasharray="8 8"/><path d="M951 308l7-13 7 13z" fill="#ca8a04"/><text x="1090" y="385" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="18" fill="#854d0e">未通过时回到论证与写作</text>
 </svg>
