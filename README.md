@@ -4,29 +4,9 @@
 
 Research Skill Pack 是一个运行在 **ChatGPT Desktop Codex** 中的个人本地插件。它不是“输入题目，生成一篇论文”的工具；它把一篇论文拆回它本来就该有的样子：一连串需要人确认、需要证据支撑、需要经得起追问的研究决定。
 
-```mermaid
-flowchart LR
-    accTitle: 科研技能包全景
-    accDescr: 一项研究从理解研究者开始，经过选题判断、证据建立和论证写作，最终在审计通过后形成可归档的科研项目。
+![科研技能包全景图：从理解研究者开始，经选题判断、证据建立、论证写作和审计，最终归档研究项目。](assets/diagram-sources/01-research-overview.svg)
 
-    researcher([👤 理解研究者]) --> topic[🔍 判断选题]
-    topic --> evidence[📚 建立证据]
-    evidence --> argument[📝 搭建论证]
-    argument --> manuscript[✍️ 撰写论文]
-    manuscript --> guard{🛡️ 通过审计？}
-    guard -->|返修| argument
-    guard -->|可归档| archive([🏁 归档研究项目])
-
-    classDef primary fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
-    classDef evidence_style fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
-    classDef decision fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12
-    classDef success fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
-
-    class researcher,topic primary
-    class evidence,argument,manuscript evidence_style
-    class guard decision
-    class archive success
-```
+_图 1：科研技能包全景。_
 
 它的目标不是替研究者“完成论文”，而是帮助研究者把每一个关键选择留在正确的位置：什么已经证实、什么只是推测、什么必须由本人确认、下一步最值得做什么。
 
@@ -92,43 +72,9 @@ Research Skill Pack 就是为这条链设计的。
 
 ## 12 个主阶段：每一步为什么存在，又留下些什么
 
-```mermaid
-flowchart LR
-    accTitle: 十二个研究主阶段
-    accDescr: 十二个主阶段被组织为立项、证据、论证和去向四个阶段，第八点五步的可追溯闸门位于写作和引用审计之间。
+![十二个研究主阶段图：立项、证据、论证与去向四个阶段，包含第 8.5 步可追溯闸门。](assets/diagram-sources/02-twelve-stages.svg)
 
-    subgraph establish["📋 立项：先确定值得做什么"]
-        stage_1[1 背景采集与选题雷达] --> stage_2[2 发现研究空白] --> stage_3[3 立项评审委员会]
-    end
-
-    subgraph prove["📚 证据：再确定凭什么做"]
-        stage_4[4 文献操作系统] --> stage_5[5 研究设计] --> stage_6[6 数据与证据]
-    end
-
-    subgraph write["📝 论证：让研究形成论文"]
-        stage_7[7 论文架构师] --> stage_8[8 学术写作] --> stage_85{8.5 可追溯闸门} --> stage_9[9 引用审计] --> stage_10[10 模拟审稿]
-    end
-
-    subgraph deliver["🏁 去向：准备提交并留下档案"]
-        stage_11[11 期刊与会议匹配] --> stage_12[12 投稿与项目归档]
-    end
-
-    stage_3 --> stage_4
-    stage_6 --> stage_7
-    stage_10 --> stage_11
-
-    classDef establish_style fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
-    classDef evidence_style fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
-    classDef writing_style fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
-    classDef decision fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12
-    classDef delivery_style fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
-
-    class stage_1,stage_2,stage_3 establish_style
-    class stage_4,stage_5,stage_6 evidence_style
-    class stage_7,stage_8,stage_9,stage_10 writing_style
-    class stage_85 decision
-    class stage_11,stage_12 delivery_style
-```
+_图 2：十二个研究主阶段。_
 
 <details>
 <summary><strong>📋 展开阅读：12 个阶段各自解决什么、留下什么</strong></summary>
@@ -313,35 +259,9 @@ Citation Guard 从句子和段落出发检查：这句话需要外部引用吗�
 
 因此，时间管理不是 Intake 里一个“最终截止日期”字段，而是一条和研究状态机并行的主线。
 
-```mermaid
-flowchart TB
-    accTitle: 科研时间线系统
-    accDescr: 时间线系统将截止日期、真实周容量和任务依赖转化为已确认的里程碑与周行动，再依据用户确认的进度提出重排建议。
+![科研时间线系统图：最终截止、可投入时间和执行计划形成闭环；发生延期时仅提出重排建议，须由用户确认。](assets/diagram-sources/03-timeline-os.svg)
 
-    deadline([⏰ 最终提交日期]) --> ladder[📋 建立截止梯]
-    constraints[👤 周容量与不可用时间] --> baseline[⚙️ 确认时间线基线]
-    ladder --> baseline
-    baseline --> plan[📝 生成执行计划]
-    plan --> critical_path[🔗 识别关键路径]
-    critical_path --> weekly[🎯 规划本周行动]
-    weekly --> check_in[📊 对照确认进度]
-    check_in --> drift{🔍 是否按计划推进？}
-    drift -->|是| weekly
-    drift -->|否| rebaseline[✏️ 提出重排方案]
-    rebaseline --> approval{👤 用户确认？}
-    approval -->|确认| plan
-    approval -->|暂不确认| weekly
-
-    classDef input fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
-    classDef process fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
-    classDef decision fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12
-    classDef action fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
-
-    class deadline,constraints input
-    class ladder,baseline,plan,critical_path,weekly,check_in process
-    class drift,approval decision
-    class rebaseline action
-```
+_图 3：科研时间线与里程碑系统。_
 
 Timeline OS 包含时间信息采集、截止梯生成、真实容量评估、选题前 Baseline、执行计划、依赖/关键路径分析、周行动计划、下一步导航、偏移监测、重排方案与提交就绪检查。
 
@@ -372,28 +292,9 @@ Timeline OS 包含时间信息采集、截止梯生成、真实容量评估、�
 
 目前 Skill Pack 中有 **170+ 个细粒度工作单元**。数量不是为了显得复杂，而是为了让每一个关键判断都拥有自己的：前置条件、输入、输出 artifact、状态影响、失败/阻断行为和验收用例。
 
-```mermaid
-flowchart TB
-    accTitle: 科研技能包架构
-    accDescr: 唯一的总入口为项目路由到稳定的宏观阶段技能，170 多个显式细技能再产生版本化、可检查的本地项目产物。
+![科研技能包架构图：研究者通过总入口进入宏观阶段技能和 170 多个细技能，所有产物写入版本化项目状态。](assets/diagram-sources/04-skill-architecture.svg)
 
-    user([👤 研究者]) --> orchestrator[🧠 科研总入口]
-    orchestrator --> macro[📋 宏观阶段技能]
-    macro --> micro[⚙️ 170 多个细技能]
-    micro --> artifacts[(💾 版本化产物)]
-    artifacts --> project[(💾 项目状态真源)]
-    project --> orchestrator
-
-    classDef human fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
-    classDef route fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
-    classDef work fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
-    classDef storage fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
-
-    class user human
-    class orchestrator,macro route
-    class micro work
-    class artifacts,project storage
-```
+_图 4：科研技能包架构。_
 
 例如，“第一步选题”并不是一个任务，而至少包含：
 
@@ -462,51 +363,9 @@ flowchart TB
 
 状态机让项目不再只是“一个聊天窗口”。它会沿着下列阶段前进，并在需要时明确停下：
 
-```mermaid
-stateDiagram-v2
-    accTitle: 科研项目状态机
-    accDescr: 项目从需求采集草稿依次经过选题、证据、论文、审稿、投稿准备，直至归档；调整方向、终止研究和受阻均保留为显式状态。
+![科研项目状态机图：项目从需求采集依次进入选题、研究设计、证据、论文、审稿和投稿准备，直至归档；受阻、调整方向与终止研究均为显式状态。](assets/diagram-sources/05-project-lifecycle.svg)
 
-    state "需求采集草稿" as IntakeDraft
-    state "需求已确认" as IntakeConfirmed
-    state "选题已评估" as TopicAssessed
-    state "研究空白已就绪" as GapReady
-    state "立项已决策" as BoardDecided
-    state "研究设计已就绪" as DesignReady
-    state "证据已就绪" as EvidenceReady
-    state "论文蓝图已就绪" as BlueprintReady
-    state "论文已审计" as ManuscriptAudited
-    state "模拟审稿已就绪" as ReviewReady
-    state "期刊匹配已就绪" as VenueReady
-    state "投稿准备已就绪" as SubmissionReady
-    state "项目已归档" as Archived
-    state "调整方向" as Pivot
-    state "终止研究" as Kill
-    state "项目受阻" as Blocked
-
-    [*] --> IntakeDraft: 📥 创建项目
-    IntakeDraft --> IntakeConfirmed: 👤 确认背景与时间线
-    IntakeConfirmed --> TopicAssessed: 🔍 评估选题
-    TopicAssessed --> GapReady: 📚 核验研究空白
-    GapReady --> BoardDecided: 👥 确认立项结论
-    BoardDecided --> DesignReady: ⚙️ 确认协议与计划
-    DesignReady --> EvidenceReady: 📊 核验研究证据包
-    EvidenceReady --> BlueprintReady: 📝 搭建论证树
-    BlueprintReady --> ManuscriptAudited: 🛡️ 审计论文
-    ManuscriptAudited --> ReviewReady: 🔍 模拟审稿
-    ReviewReady --> VenueReady: 🎯 核验期刊信息
-    VenueReady --> SubmissionReady: 👤 确认投稿包
-    SubmissionReady --> Archived: 🏁 归档项目
-
-    TopicAssessed --> Pivot: ✏️ 调整方向
-    BoardDecided --> Kill: ❌ 致命缺陷
-    IntakeDraft --> Blocked: ⚠️ 缺少必要信息
-    DesignReady --> Blocked: ⚠️ 缺少关键依赖
-    Blocked --> IntakeDraft: 🔄 解决问题
-    Pivot --> TopicAssessed: 🔄 重新评估
-    Archived --> [*]
-    Kill --> [*]
-```
+_图 5：科研项目状态机。_
 
 `PIVOT`、`KILL` 与 `blocked` 是诚实的独立状态，而不是失败被藏起来。用户当然可以覆盖建议，但该覆盖及其理由会留下记录，依赖该决定的下游产物会被标为 `advisory_only`。
 
