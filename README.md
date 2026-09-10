@@ -6,16 +6,16 @@ Research Skill Pack 是一个运行在 **ChatGPT Desktop Codex** 中的个人本
 
 ```mermaid
 flowchart LR
-    accTitle: Research Skill Pack overview
-    accDescr: A research project moves from understanding the researcher through topic decisions and evidence building to an auditable manuscript and archive, with integrity checks before writing and submission.
+    accTitle: 科研技能包全景
+    accDescr: 一项研究从理解研究者开始，经过选题判断、证据建立和论证写作，最终在审计通过后形成可归档的科研项目。
 
-    researcher([👤 Understand researcher]) --> topic[🔍 Judge topic]
-    topic --> evidence[📚 Build evidence]
-    evidence --> argument[📝 Build argument]
-    argument --> manuscript[✍️ Draft manuscript]
-    manuscript --> guard{🛡️ Pass audit?}
-    guard -->|Revise| argument
-    guard -->|Ready| archive([🏁 Archive research])
+    researcher([👤 理解研究者]) --> topic[🔍 判断选题]
+    topic --> evidence[📚 建立证据]
+    evidence --> argument[📝 搭建论证]
+    argument --> manuscript[✍️ 撰写论文]
+    manuscript --> guard{🛡️ 通过审计？}
+    guard -->|返修| argument
+    guard -->|可归档| archive([🏁 归档研究项目])
 
     classDef primary fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
     classDef evidence_style fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
@@ -94,23 +94,23 @@ Research Skill Pack 就是为这条链设计的。
 
 ```mermaid
 flowchart LR
-    accTitle: Twelve research stages
-    accDescr: The twelve main research stages are grouped into four readable phases, with the 8.5 traceability gate placed between writing and citation review.
+    accTitle: 十二个研究主阶段
+    accDescr: 十二个主阶段被组织为立项、证据、论证和去向四个阶段，第八点五步的可追溯闸门位于写作和引用审计之间。
 
     subgraph establish["📋 立项：先确定值得做什么"]
-        stage_1[1 Context and radar] --> stage_2[2 Find gap] --> stage_3[3 Review board]
+        stage_1[1 背景采集与选题雷达] --> stage_2[2 发现研究空白] --> stage_3[3 立项评审委员会]
     end
 
     subgraph prove["📚 证据：再确定凭什么做"]
-        stage_4[4 Literature OS] --> stage_5[5 Research design] --> stage_6[6 Data and evidence]
+        stage_4[4 文献操作系统] --> stage_5[5 研究设计] --> stage_6[6 数据与证据]
     end
 
     subgraph write["📝 论证：让研究形成论文"]
-        stage_7[7 Paper architect] --> stage_8[8 Academic writing] --> stage_85{8.5 Traceability gate} --> stage_9[9 Citation guard] --> stage_10[10 Reviewer simulator]
+        stage_7[7 论文架构师] --> stage_8[8 学术写作] --> stage_85{8.5 可追溯闸门} --> stage_9[9 引用审计] --> stage_10[10 模拟审稿]
     end
 
     subgraph deliver["🏁 去向：准备提交并留下档案"]
-        stage_11[11 Venue matcher] --> stage_12[12 Submission and archive]
+        stage_11[11 期刊与会议匹配] --> stage_12[12 投稿与项目归档]
     end
 
     stage_3 --> stage_4
@@ -315,22 +315,22 @@ Citation Guard 从句子和段落出发检查：这句话需要外部引用吗�
 
 ```mermaid
 flowchart TB
-    accTitle: Timeline operating system
-    accDescr: The timeline system turns deadlines, real weekly capacity, and dependencies into confirmed milestones and weekly actions, then compares them with confirmed progress before proposing a replan.
+    accTitle: 科研时间线系统
+    accDescr: 时间线系统将截止日期、真实周容量和任务依赖转化为已确认的里程碑与周行动，再依据用户确认的进度提出重排建议。
 
-    deadline([⏰ Final deadline]) --> ladder[📋 Build deadline ladder]
-    constraints[👤 Capacity and unavailable dates] --> baseline[⚙️ Confirm timeline baseline]
+    deadline([⏰ 最终提交日期]) --> ladder[📋 建立截止梯]
+    constraints[👤 周容量与不可用时间] --> baseline[⚙️ 确认时间线基线]
     ladder --> baseline
-    baseline --> plan[📝 Build execution plan]
-    plan --> critical_path[🔗 Find critical path]
-    critical_path --> weekly[🎯 Plan this week]
-    weekly --> check_in[📊 Compare confirmed progress]
-    check_in --> drift{🔍 On track?}
-    drift -->|Yes| weekly
-    drift -->|No| rebaseline[✏️ Propose rebaseline]
-    rebaseline --> approval{👤 User confirms?}
-    approval -->|Yes| plan
-    approval -->|No| weekly
+    baseline --> plan[📝 生成执行计划]
+    plan --> critical_path[🔗 识别关键路径]
+    critical_path --> weekly[🎯 规划本周行动]
+    weekly --> check_in[📊 对照确认进度]
+    check_in --> drift{🔍 是否按计划推进？}
+    drift -->|是| weekly
+    drift -->|否| rebaseline[✏️ 提出重排方案]
+    rebaseline --> approval{👤 用户确认？}
+    approval -->|确认| plan
+    approval -->|暂不确认| weekly
 
     classDef input fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
     classDef process fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
@@ -374,14 +374,14 @@ Timeline OS 包含时间信息采集、截止梯生成、真实容量评估、�
 
 ```mermaid
 flowchart TB
-    accTitle: Skill pack architecture
-    accDescr: One orchestrator routes a project to stable macro stage skills, while more than 170 explicit micro skills produce versioned and checkable artifacts in the local project record.
+    accTitle: 科研技能包架构
+    accDescr: 唯一的总入口为项目路由到稳定的宏观阶段技能，170 多个显式细技能再产生版本化、可检查的本地项目产物。
 
-    user([👤 Researcher]) --> orchestrator[🧠 Research orchestrator]
-    orchestrator --> macro[📋 Macro stage skills]
-    macro --> micro[⚙️ 170 plus micro skills]
-    micro --> artifacts[(💾 Versioned artifacts)]
-    artifacts --> project[(💾 project.yaml)]
+    user([👤 研究者]) --> orchestrator[🧠 科研总入口]
+    orchestrator --> macro[📋 宏观阶段技能]
+    macro --> micro[⚙️ 170 多个细技能]
+    micro --> artifacts[(💾 版本化产物)]
+    artifacts --> project[(💾 项目状态真源)]
     project --> orchestrator
 
     classDef human fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
@@ -464,29 +464,46 @@ flowchart TB
 
 ```mermaid
 stateDiagram-v2
-    accTitle: Research project lifecycle
-    accDescr: A project progresses from draft intake through topic, evidence, manuscript, review, venue, and submission preparation to archive, while pivot, kill, and blocked remain explicit states.
+    accTitle: 科研项目状态机
+    accDescr: 项目从需求采集草稿依次经过选题、证据、论文、审稿、投稿准备，直至归档；调整方向、终止研究和受阻均保留为显式状态。
 
-    [*] --> IntakeDraft: 📥 Create project
-    IntakeDraft --> IntakeConfirmed: 👤 Confirm context and timeline
-    IntakeConfirmed --> TopicAssessed: 🔍 Assess topic
-    TopicAssessed --> GapReady: 📚 Verify gap
-    GapReady --> BoardDecided: 👥 Confirm board decision
-    BoardDecided --> DesignReady: ⚙️ Confirm protocol and plan
-    DesignReady --> EvidenceReady: 📊 Verify evidence package
-    EvidenceReady --> BlueprintReady: 📝 Build argument tree
-    BlueprintReady --> ManuscriptAudited: 🛡️ Audit manuscript
-    ManuscriptAudited --> ReviewReady: 🔍 Simulate review
-    ReviewReady --> VenueReady: 🎯 Verify venue information
-    VenueReady --> SubmissionReady: 👤 Confirm submission package
-    SubmissionReady --> Archived: 🏁 Archive project
+    state "需求采集草稿" as IntakeDraft
+    state "需求已确认" as IntakeConfirmed
+    state "选题已评估" as TopicAssessed
+    state "研究空白已就绪" as GapReady
+    state "立项已决策" as BoardDecided
+    state "研究设计已就绪" as DesignReady
+    state "证据已就绪" as EvidenceReady
+    state "论文蓝图已就绪" as BlueprintReady
+    state "论文已审计" as ManuscriptAudited
+    state "模拟审稿已就绪" as ReviewReady
+    state "期刊匹配已就绪" as VenueReady
+    state "投稿准备已就绪" as SubmissionReady
+    state "项目已归档" as Archived
+    state "调整方向" as Pivot
+    state "终止研究" as Kill
+    state "项目受阻" as Blocked
 
-    TopicAssessed --> Pivot: ✏️ Change direction
-    BoardDecided --> Kill: ❌ Fatal flaw
-    IntakeDraft --> Blocked: ⚠️ Missing requirement
-    DesignReady --> Blocked: ⚠️ Missing dependency
-    Blocked --> IntakeDraft: 🔄 Resolve issue
-    Pivot --> TopicAssessed: 🔄 Reassess
+    [*] --> IntakeDraft: 📥 创建项目
+    IntakeDraft --> IntakeConfirmed: 👤 确认背景与时间线
+    IntakeConfirmed --> TopicAssessed: 🔍 评估选题
+    TopicAssessed --> GapReady: 📚 核验研究空白
+    GapReady --> BoardDecided: 👥 确认立项结论
+    BoardDecided --> DesignReady: ⚙️ 确认协议与计划
+    DesignReady --> EvidenceReady: 📊 核验研究证据包
+    EvidenceReady --> BlueprintReady: 📝 搭建论证树
+    BlueprintReady --> ManuscriptAudited: 🛡️ 审计论文
+    ManuscriptAudited --> ReviewReady: 🔍 模拟审稿
+    ReviewReady --> VenueReady: 🎯 核验期刊信息
+    VenueReady --> SubmissionReady: 👤 确认投稿包
+    SubmissionReady --> Archived: 🏁 归档项目
+
+    TopicAssessed --> Pivot: ✏️ 调整方向
+    BoardDecided --> Kill: ❌ 致命缺陷
+    IntakeDraft --> Blocked: ⚠️ 缺少必要信息
+    DesignReady --> Blocked: ⚠️ 缺少关键依赖
+    Blocked --> IntakeDraft: 🔄 解决问题
+    Pivot --> TopicAssessed: 🔄 重新评估
     Archived --> [*]
     Kill --> [*]
 ```
