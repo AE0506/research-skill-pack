@@ -1,0 +1,7 @@
+interface:
+  display_name: "研究谱系构建"
+  short_description: "识别奠基、转折、方法里程碑、前沿与争议性研究之间的谱系。"
+  default_prompt: "Use $research-lineage-mapper for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

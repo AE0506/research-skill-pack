@@ -1,0 +1,6 @@
+interface:
+  display_name: "选题机会报告"
+  short_description: "汇总候选题、取舍与甜蜜区为决策报告"
+  default_prompt: "Use $topic-opportunity-report-builder to create my topic opportunity report."
+policy:
+  allow_implicit_invocation: false

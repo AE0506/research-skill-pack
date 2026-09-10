@@ -1,0 +1,6 @@
+interface:
+  display_name: "Claim Graph Builder"
+  short_description: "映射命题依赖与冲突"
+  default_prompt: "Use $claim-graph-builder to map manuscript claim dependencies."
+policy:
+  allow_implicit_invocation: false

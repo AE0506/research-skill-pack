@@ -1,0 +1,6 @@
+interface:
+  display_name: "Evidence Scope Mismatch Checker"
+  short_description: "检查主张是否超出引文范围"
+  default_prompt: "Use $evidence-scope-mismatch-checker on my manuscript claims."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "冲突证据地图构建"
+  short_description: "可视化相互支持与矛盾的发现，并定位可能的条件差异。"
+  default_prompt: "Use $conflict-map-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

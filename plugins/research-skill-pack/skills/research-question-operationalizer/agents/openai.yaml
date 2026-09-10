@@ -1,0 +1,7 @@
+interface:
+  display_name: "研究问题操作化"
+  short_description: "把已确认研究问题拆成对象、关系、情境、可观察结果和证据需求。"
+  default_prompt: "Use $research-question-operationalizer for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

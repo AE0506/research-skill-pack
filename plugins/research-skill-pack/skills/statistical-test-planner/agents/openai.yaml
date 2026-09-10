@@ -1,0 +1,7 @@
+interface:
+  display_name: "统计检验规划"
+  short_description: "将 Analysis Plan 细化为检验假设、前提检查、效应量、显著性和报告规则。"
+  default_prompt: "Use $statistical-test-planner for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

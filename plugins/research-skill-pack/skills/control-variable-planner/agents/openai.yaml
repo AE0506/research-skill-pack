@@ -1,0 +1,7 @@
+interface:
+  display_name: "控制变量规划"
+  short_description: "区分必要控制、潜在混杂、不可控制因素与过度控制风险。"
+  default_prompt: "Use $control-variable-planner for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

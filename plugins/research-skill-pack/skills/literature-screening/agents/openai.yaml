@@ -1,0 +1,7 @@
+interface:
+  display_name: "文献筛选"
+  short_description: "按已确认的问题/范围给文献标注纳入、排除、待定与项目角色。"
+  default_prompt: "Use $literature-screening for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

@@ -1,0 +1,6 @@
+interface:
+  display_name: "选题指纹构建"
+  short_description: "以对象、关系、情境、方法表示候选题"
+  default_prompt: "Use $topic-fingerprint-builder to build fingerprints for my topic candidates."
+policy:
+  allow_implicit_invocation: false

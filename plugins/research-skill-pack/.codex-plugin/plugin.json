@@ -1,0 +1,22 @@
+{
+  "name": "research-skill-pack",
+  "version": "0.2.0",
+  "description": "A local, evidence-first research workflow for Chinese undergraduate information-management and social-science projects.",
+  "author": {
+    "name": "Zhang Zheng"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Research Skill Pack",
+    "shortDescription": "Evidence-first research workflow skills",
+    "longDescription": "Guide a local research project through more than 170 explicit, evidence-first research work units, including a cross-project Timeline and Milestone OS. It never fabricates evidence, handles raw sensitive data by default, or submits work externally.",
+    "developerName": "Zhang Zheng",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Use $research-orchestrator to start my local research project.",
+      "Use $research-radar to prepare my research context and topic opportunity profile.",
+      "Use $research-review-board to review my current research proposal."
+    ]
+  }
+}

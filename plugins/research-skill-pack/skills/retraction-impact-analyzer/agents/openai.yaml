@@ -1,0 +1,7 @@
+interface:
+  display_name: "撤稿与更正影响分析"
+  short_description: "登记已知撤稿/更正/替代后，追踪受影响 Claim 与下游 artifact。"
+  default_prompt: "Use $retraction-impact-analyzer for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

@@ -1,0 +1,6 @@
+interface:
+  display_name: "研究 Profile 选择"
+  short_description: "明确项目适用的研究模式"
+  default_prompt: "Use $profile-selector to select the research profile for my project."
+policy:
+  allow_implicit_invocation: false

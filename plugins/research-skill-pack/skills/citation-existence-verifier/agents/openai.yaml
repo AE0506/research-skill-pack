@@ -1,0 +1,6 @@
+interface:
+  display_name: "Citation Existence Verifier"
+  short_description: "核验本地引用元数据一致性"
+  default_prompt: "Use $citation-existence-verifier for my imported references."
+policy:
+  allow_implicit_invocation: false

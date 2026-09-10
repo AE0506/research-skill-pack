@@ -1,0 +1,6 @@
+interface:
+  display_name: "领域机会发现"
+  short_description: "发现有本地证据支持的研究方向窗口"
+  default_prompt: "Use $field-opportunity-discovery to find research opportunities in my local evidence."
+policy:
+  allow_implicit_invocation: false

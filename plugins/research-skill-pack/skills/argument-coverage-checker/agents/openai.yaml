@@ -1,0 +1,6 @@
+interface:
+  display_name: "Argument Coverage Checker"
+  short_description: "审计论证覆盖与逻辑跳跃"
+  default_prompt: "Use $argument-coverage-checker before I draft the manuscript."
+policy:
+  allow_implicit_invocation: false

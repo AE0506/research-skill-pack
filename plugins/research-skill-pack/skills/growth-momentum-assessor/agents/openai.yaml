@@ -1,0 +1,6 @@
+interface:
+  display_name: "研究增长动量"
+  short_description: "按双 24 个月窗口评估领域增长"
+  default_prompt: "Use $growth-momentum-assessor to assess growth momentum in my local evidence."
+policy:
+  allow_implicit_invocation: false

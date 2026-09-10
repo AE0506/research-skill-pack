@@ -1,0 +1,6 @@
+interface:
+  display_name: "Response to Reviewers Drafter"
+  short_description: "起草证据化逐条审稿回复"
+  default_prompt: "Use $response-to-reviewers-drafter for my response matrix."
+policy:
+  allow_implicit_invocation: false

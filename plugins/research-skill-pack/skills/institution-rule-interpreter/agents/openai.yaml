@@ -1,0 +1,6 @@
+interface:
+  display_name: "院校规则解释"
+  short_description: "说明论文规范对流程的影响与疑点"
+  default_prompt: "Use $institution-rule-interpreter to interpret my recorded thesis rules."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研背景确认闸门"
+  short_description: "确认背景简报与时间基线后再进入选题"
+  default_prompt: "Use $context-confirmation-gate to confirm my research context."
+policy:
+  allow_implicit_invocation: false

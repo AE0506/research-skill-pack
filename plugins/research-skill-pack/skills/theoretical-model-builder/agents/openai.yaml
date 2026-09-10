@@ -1,0 +1,7 @@
+interface:
+  display_name: "理论模型构建"
+  short_description: "把已核验证据组织为变量关系、机制和边界条件的理论模型。"
+  default_prompt: "Use $theoretical-model-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

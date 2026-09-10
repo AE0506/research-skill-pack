@@ -1,0 +1,7 @@
+interface:
+  display_name: "文献矩阵构建"
+  short_description: "把已核验的 Paper、变量、方法、发现、局限和 Future Work 组织为研究矩阵。"
+  default_prompt: "Use $literature-matrix-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

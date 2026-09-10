@@ -1,0 +1,7 @@
+interface:
+  display_name: "数据清洗版本管理"
+  short_description: "登记清洗输出路径、输入哈希、脚本/步骤、版本与差异摘要。"
+  default_prompt: "Use $data-cleaning-versioner for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

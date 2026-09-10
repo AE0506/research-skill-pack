@@ -1,0 +1,19 @@
+schema_version: "0.2"
+id: execution-timeline-001
+type: execution_timeline
+version: 1
+created_at: "2026-09-12T08:45:00Z"
+created_by: skill
+status: confirmed
+depends_on: [research-protocol-001, timeline-baseline-001]
+supersedes: null
+change_reason: 用户确认研究执行里程碑
+provenance: project_generated
+verification_status: human_verified
+manuscript_eligibility: not_eligible
+confirmation: {confirmed_by: user, confirmed_at: "2026-09-12T09:00:00Z"}
+timeline:
+  milestones:
+    - {id: data-collection, label: 完成真实数据收集, due_date: "2027-02-20", depends_on: []}
+    - {id: analysis, label: 完成分析与结果核验, due_date: "2027-03-15", depends_on: [data-collection]}
+  health: on_track

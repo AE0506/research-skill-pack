@@ -1,0 +1,6 @@
+interface:
+  display_name: "候选选题生成"
+  short_description: "按已确认约束提出可比较的研究候选题"
+  default_prompt: "Use $topic-candidate-generator to generate research topic candidates for my project."
+policy:
+  allow_implicit_invocation: false

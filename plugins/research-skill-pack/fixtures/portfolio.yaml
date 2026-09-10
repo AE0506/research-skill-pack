@@ -1,0 +1,10 @@
+schema_version: "0.2"
+portfolio_id: zhang-research-portfolio
+projects:
+  - project_id: timeline-ai-behavior
+    title: 生成式 AI 使用与大学生信息搜寻行为
+    project_path: /Users/example/Documents/research-project
+    current_state: design_ready
+    timeline_health: on_track
+    next_milestone: {label: 完成真实数据收集, due_date: "2027-02-20"}
+    last_checked_at: "2026-09-12T09:00:00Z"

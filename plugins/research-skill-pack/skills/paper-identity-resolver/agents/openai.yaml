@@ -1,0 +1,7 @@
+interface:
+  display_name: "文献身份解析"
+  short_description: "消解标题、作者、年份、DOI 与 venue 的重复或冲突，建立单一逻辑 Paper 身份。"
+  default_prompt: "Use $paper-identity-resolver for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

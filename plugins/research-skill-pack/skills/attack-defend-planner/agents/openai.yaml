@@ -1,0 +1,6 @@
+interface:
+  display_name: "Attack–Defend Planner"
+  short_description: "把审稿攻击转为证据化返修"
+  default_prompt: "Use $attack-defend-planner for my review findings."
+policy:
+  allow_implicit_invocation: false

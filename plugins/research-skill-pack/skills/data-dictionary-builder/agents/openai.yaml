@@ -1,0 +1,7 @@
+interface:
+  display_name: "数据字典构建"
+  short_description: "记录允许分析的数据字段、类型、含义、缺失编码、派生规则与敏感等级。"
+  default_prompt: "Use $data-dictionary-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

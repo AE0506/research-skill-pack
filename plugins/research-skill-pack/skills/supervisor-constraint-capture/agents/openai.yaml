@@ -1,0 +1,6 @@
+interface:
+  display_name: "导师约束采集"
+  short_description: "保留导师意见、限制与待确认问题"
+  default_prompt: "Use $supervisor-constraint-capture to record my supervisor's guidance."
+policy:
+  allow_implicit_invocation: false

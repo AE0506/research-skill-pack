@@ -1,0 +1,6 @@
+interface:
+  display_name: "Manuscript Version Manager"
+  short_description: "管理论文版本链与修改原因"
+  default_prompt: "Use $manuscript-version-manager for my revised manuscript."
+policy:
+  allow_implicit_invocation: false

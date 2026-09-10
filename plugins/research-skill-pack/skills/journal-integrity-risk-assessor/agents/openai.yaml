@@ -1,0 +1,6 @@
+interface:
+  display_name: "Journal Integrity Risk Assessor"
+  short_description: "评估期刊诚信风险"
+  default_prompt: "Use $journal-integrity-risk-assessor for verified venue information."
+policy:
+  allow_implicit_invocation: false

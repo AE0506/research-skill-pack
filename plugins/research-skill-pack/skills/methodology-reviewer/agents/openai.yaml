@@ -1,0 +1,6 @@
+interface:
+  display_name: "Methodology Reviewer"
+  short_description: "模拟方法论审稿"
+  default_prompt: "Use $methodology-reviewer on my protocol and manuscript."
+policy:
+  allow_implicit_invocation: false

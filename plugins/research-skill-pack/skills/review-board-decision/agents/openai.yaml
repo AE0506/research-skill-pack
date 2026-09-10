@@ -1,0 +1,7 @@
+interface:
+  display_name: "评审委员会决策"
+  short_description: "汇总七类评审证据卡，形成 GO、CONDITIONAL GO、PIVOT 或 KILL 草案。"
+  default_prompt: "Use $review-board-decision for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

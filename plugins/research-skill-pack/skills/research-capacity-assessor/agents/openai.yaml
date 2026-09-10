@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研容量评估"
+  short_description: "按真实可投入时间评估执行容量"
+  default_prompt: "Use $research-capacity-assessor to assess my realistic research capacity."
+policy:
+  allow_implicit_invocation: false

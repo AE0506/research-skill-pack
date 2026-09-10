@@ -1,0 +1,7 @@
+interface:
+  display_name: "理论审稿"
+  short_description: "以理论适用性、机制清晰度和边界条件审查候选研究问题。"
+  default_prompt: "Use $theory-reviewer for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

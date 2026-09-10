@@ -1,0 +1,6 @@
+interface:
+  display_name: "Article Pattern Fit"
+  short_description: "匹配期刊实际发表模式"
+  default_prompt: "Use $article-pattern-fit for my venue evidence."
+policy:
+  allow_implicit_invocation: false

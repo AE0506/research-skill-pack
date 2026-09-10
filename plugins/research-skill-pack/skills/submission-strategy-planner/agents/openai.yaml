@@ -1,0 +1,6 @@
+interface:
+  display_name: "Submission Strategy Planner"
+  short_description: "制定投稿梯队与备选路径"
+  default_prompt: "Use $submission-strategy-planner for my venue ladder."
+policy:
+  allow_implicit_invocation: false

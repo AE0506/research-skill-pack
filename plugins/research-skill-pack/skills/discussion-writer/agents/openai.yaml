@@ -1,0 +1,6 @@
+interface:
+  display_name: "Discussion Writer"
+  short_description: "从结果和证据起草讨论章节"
+  default_prompt: "Use $discussion-writer for my verified manuscript findings."
+policy:
+  allow_implicit_invocation: false

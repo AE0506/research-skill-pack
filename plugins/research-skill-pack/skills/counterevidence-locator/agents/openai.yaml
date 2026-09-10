@@ -1,0 +1,7 @@
+interface:
+  display_name: "反例定位"
+  short_description: "针对候选 Gap 或 Claim 主动定位相反研究、重复研究和不适用边界。"
+  default_prompt: "Use $counterevidence-locator for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Evidence Rebuttal Checker"
+  short_description: "核验审稿回复的证据基础"
+  default_prompt: "Use $evidence-rebuttal-checker on my reviewer responses."
+policy:
+  allow_implicit_invocation: false

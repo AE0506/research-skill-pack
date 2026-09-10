@@ -1,0 +1,6 @@
+interface:
+  display_name: "Chapter Mapper"
+  short_description: "将论证映射到论文章节"
+  default_prompt: "Use $chapter-mapper to map my argument tree to chapters."
+policy:
+  allow_implicit_invocation: false

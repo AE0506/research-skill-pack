@@ -1,0 +1,6 @@
+interface:
+  display_name: "数据与证据工作台"
+  short_description: "登记真实数据、分析谱系、结果与证据资格"
+  default_prompt: "Use $research-evidence-lab to register my real data lineage and analysis evidence safely."
+policy:
+  allow_implicit_invocation: false

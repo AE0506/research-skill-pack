@@ -1,0 +1,7 @@
+interface:
+  display_name: "能力展示审稿"
+  short_description: "评估项目能否展示用户目标能力，同时不牺牲研究有效性。"
+  default_prompt: "Use $capability-showcase-reviewer for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

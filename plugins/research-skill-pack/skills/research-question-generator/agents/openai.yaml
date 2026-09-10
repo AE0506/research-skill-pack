@@ -1,0 +1,7 @@
+interface:
+  display_name: "候选研究问题生成"
+  short_description: "从确认的 Gap 与现实约束生成可回答的候选 Research Question。"
+  default_prompt: "Use $research-question-generator for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

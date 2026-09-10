@@ -1,0 +1,6 @@
+interface:
+  display_name: "Cover Letter Drafter"
+  short_description: "起草证据化投稿附信"
+  default_prompt: "Use $cover-letter-drafter for my selected venue."
+policy:
+  allow_implicit_invocation: false

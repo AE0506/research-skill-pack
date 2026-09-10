@@ -1,0 +1,6 @@
+interface:
+  display_name: "文献与证据库"
+  short_description: "管理本地文献、命题证据、冲突和引用链路"
+  default_prompt: "Use $research-literature-os to organize my imported literature into a traceable evidence base."
+policy:
+  allow_implicit_invocation: false

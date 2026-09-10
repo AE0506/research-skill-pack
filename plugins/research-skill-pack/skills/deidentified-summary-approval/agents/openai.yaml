@@ -1,0 +1,7 @@
+interface:
+  display_name: "脱敏摘要批准"
+  short_description: "记录用户对最小必要脱敏摘要的特定用途、范围和到期批准。"
+  default_prompt: "Use $deidentified-summary-approval for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

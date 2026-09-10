@@ -1,0 +1,6 @@
+interface:
+  display_name: "Pre-submission Checklist"
+  short_description: "生成投稿前人工核对清单"
+  default_prompt: "Use $presubmission-checklist for my target venue."
+policy:
+  allow_implicit_invocation: false

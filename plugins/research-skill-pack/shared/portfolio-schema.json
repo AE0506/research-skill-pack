@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://research-skill-pack.local/schemas/portfolio-v0.2.json",
+  "title": "Research Skill Pack Portfolio Registry v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "portfolio_id", "projects"],
+  "properties": {"schema_version": {"const": "0.2"}, "portfolio_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,95}$"}, "projects": {"type": "array", "items": {"$ref": "#/$defs/project"}}},
+  "$defs": {"project": {"type": "object", "additionalProperties": false, "required": ["project_id", "title", "project_path", "current_state", "timeline_health", "next_milestone", "last_checked_at"], "properties": {"project_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,95}$"}, "title": {"type": "string", "minLength": 1, "maxLength": 240}, "project_path": {"type": "string", "minLength": 1}, "current_state": {"type": "string", "minLength": 1}, "timeline_health": {"enum": ["unknown", "on_track", "at_risk", "overdue", "blocked"]}, "next_milestone": {"type": ["object", "null"], "additionalProperties": false, "required": ["label", "due_date"], "properties": {"label": {"type": "string", "minLength": 1}, "due_date": {"type": "string", "format": "date"}}}, "last_checked_at": {"type": "string", "format": "date-time"}}}}
+}

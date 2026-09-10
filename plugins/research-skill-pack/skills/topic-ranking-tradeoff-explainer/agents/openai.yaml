@@ -1,0 +1,6 @@
+interface:
+  display_name: "选题取舍解释"
+  short_description: "用证据解释候选题的利弊与条件"
+  default_prompt: "Use $topic-ranking-tradeoff-explainer to explain trade-offs among my topic candidates."
+policy:
+  allow_implicit_invocation: false

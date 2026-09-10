@@ -1,0 +1,6 @@
+interface:
+  display_name: "Author Declaration Checker"
+  short_description: "核对需作者确认的投稿声明"
+  default_prompt: "Use $author-declaration-checker for my submission package."
+policy:
+  allow_implicit_invocation: false

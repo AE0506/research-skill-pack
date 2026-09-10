@@ -1,0 +1,7 @@
+interface:
+  display_name: "方法地图构建"
+  short_description: "比较样本、数据、测量与分析方法，识别方法演进和可比性限制。"
+  default_prompt: "Use $method-map-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

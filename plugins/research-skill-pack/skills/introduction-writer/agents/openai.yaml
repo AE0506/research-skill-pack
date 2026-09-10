@@ -1,0 +1,6 @@
+interface:
+  display_name: "Introduction Writer"
+  short_description: "从证据与空白起草引言"
+  default_prompt: "Use $introduction-writer for my selected Introduction section."
+policy:
+  allow_implicit_invocation: false

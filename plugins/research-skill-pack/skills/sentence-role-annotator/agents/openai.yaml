@@ -1,0 +1,6 @@
+interface:
+  display_name: "Sentence Role Annotator"
+  short_description: "标注句子学术角色与证据链接"
+  default_prompt: "Use $sentence-role-annotator on my selected manuscript section."
+policy:
+  allow_implicit_invocation: false

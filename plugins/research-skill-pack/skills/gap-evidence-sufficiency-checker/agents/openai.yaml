@@ -1,0 +1,7 @@
+interface:
+  display_name: "空白证据充足性检查"
+  short_description: "检查 Gap 是否有足够独立、可定位的支持与反例覆盖。"
+  default_prompt: "Use $gap-evidence-sufficiency-checker for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

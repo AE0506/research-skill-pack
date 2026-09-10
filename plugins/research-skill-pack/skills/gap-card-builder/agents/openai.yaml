@@ -1,0 +1,7 @@
+interface:
+  display_name: "研究空白卡构建"
+  short_description: "为可辩护空白建立“已知什么、未知什么、反例、为何重要、所需证据”卡片。"
+  default_prompt: "Use $gap-card-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

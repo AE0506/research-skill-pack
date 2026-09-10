@@ -1,0 +1,6 @@
+interface:
+  display_name: "Manuscript Stability Tracker"
+  short_description: "追踪多轮审稿问题收敛"
+  default_prompt: "Use $manuscript-stability-tracker for my review rounds."
+policy:
+  allow_implicit_invocation: false

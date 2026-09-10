@@ -1,0 +1,7 @@
+interface:
+  display_name: "社科文献结构化解析"
+  short_description: "从已导入论文提取研究问题、理论、构念、样本、方法、结果、局限与 Future Work。"
+  default_prompt: "Use $literature-structure-extractor for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

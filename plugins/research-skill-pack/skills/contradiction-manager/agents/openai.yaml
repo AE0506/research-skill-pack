@@ -1,0 +1,7 @@
+interface:
+  display_name: "矛盾证据管理"
+  short_description: "针对冲突结果比较样本、情境、量表、时间与方法，并登记未解分歧。"
+  default_prompt: "Use $contradiction-manager for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

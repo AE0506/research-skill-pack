@@ -1,0 +1,7 @@
+interface:
+  display_name: "已核验证据包构建"
+  short_description: "汇总可以进入论文的真实结果、来源定位、适用边界与不确定性。"
+  default_prompt: "Use $verified-evidence-package-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

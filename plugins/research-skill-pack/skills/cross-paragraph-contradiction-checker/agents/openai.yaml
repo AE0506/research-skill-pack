@@ -1,0 +1,6 @@
+interface:
+  display_name: "Cross-Paragraph Contradiction Checker"
+  short_description: "检查跨章节主张和结果矛盾"
+  default_prompt: "Use $cross-paragraph-contradiction-checker on my manuscript."
+policy:
+  allow_implicit_invocation: false

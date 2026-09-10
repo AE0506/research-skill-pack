@@ -1,0 +1,6 @@
+interface:
+  display_name: "Journal Venue Matcher"
+  short_description: "按已核验资料匹配期刊会议与投稿梯队"
+  default_prompt: "Use $journal-venue-matcher to build a verified venue ladder for my audited local manuscript."
+policy:
+  allow_implicit_invocation: false

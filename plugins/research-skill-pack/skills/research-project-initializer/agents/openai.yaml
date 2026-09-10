@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研项目初始化"
+  short_description: "为新项目建立本地身份与注册草稿"
+  default_prompt: "Use $research-project-initializer to set up a new local research project."
+policy:
+  allow_implicit_invocation: false

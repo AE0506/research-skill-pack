@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://research-skill-pack.local/schemas/artifact-v0.2.json",
+  "title": "Research Artifact Contract v0.2 (v0.1 compatible)",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "id", "type", "version", "created_at", "created_by", "status", "depends_on", "supersedes", "change_reason", "provenance", "verification_status", "manuscript_eligibility"],
+  "properties": {
+    "schema_version": {"enum": ["0.1", "0.2"]}, "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,95}$"}, "type": {"type": "string"}, "version": {"type": "integer", "minimum": 1}, "created_at": {"type": "string", "format": "date-time"}, "created_by": {"enum": ["user", "skill", "import", "migration"]}, "status": {"enum": ["draft", "confirmed", "verified", "advisory_only", "superseded", "rejected", "blocked"]}, "depends_on": {"type": "array", "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,95}$"}}, "supersedes": {"type": ["string", "null"]}, "change_reason": {"type": "string", "minLength": 1},
+    "provenance": {"enum": ["external_source", "user_supplied", "project_generated", "synthetic_fixture"]}, "verification_status": {"enum": ["unreviewed", "ai_extracted", "human_verified", "rejected"]}, "manuscript_eligibility": {"enum": ["not_eligible", "background_only", "claim_eligible"]},
+    "raw_data": {"type": "object", "additionalProperties": false, "required": ["path", "sha256", "access", "truthfulness_declaration", "model_access"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}, "access": {"enum": ["restricted", "project_owner_only", "approved_deidentified_summary"]}, "truthfulness_declaration": {"type": "string", "minLength": 1}, "model_access": {"const": "forbidden_by_default"}}},
+    "confirmation": {"type": "object", "additionalProperties": false, "required": ["confirmed_by", "confirmed_at"], "properties": {"confirmed_by": {"const": "user"}, "confirmed_at": {"type": "string", "format": "date-time"}}},
+    "timeline": {"$ref": "#/$defs/timeline"}
+  },
+  "$defs": {
+    "timeline": {"type": "object", "additionalProperties": true, "properties": {"final_submission_date": {"type": "string", "format": "date"}, "hard_deadlines": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/deadline"}}, "weekly_capacity_hours": {"type": "number", "exclusiveMinimum": 0}, "unavailable_periods": {"type": "array", "items": {"$ref": "#/$defs/dateRange"}}, "milestones": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/milestone"}}, "health": {"enum": ["unknown", "on_track", "at_risk", "overdue", "blocked"]}, "ready_for_submission": {"type": "boolean"}}},
+    "deadline": {"type": "object", "additionalProperties": false, "required": ["id", "label", "date", "kind"], "properties": {"id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,95}$"}, "label": {"type": "string", "minLength": 1}, "date": {"type": "string", "format": "date"}, "kind": {"enum": ["final_submission", "school", "supervisor", "personal"]}}},
+    "dateRange": {"type": "object", "additionalProperties": false, "required": ["start", "end", "reason"], "properties": {"start": {"type": "string", "format": "date"}, "end": {"type": "string", "format": "date"}, "reason": {"type": "string", "minLength": 1}}},
+    "milestone": {"type": "object", "additionalProperties": false, "required": ["id", "label", "due_date", "depends_on"], "properties": {"id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,95}$"}, "label": {"type": "string", "minLength": 1}, "due_date": {"type": "string", "format": "date"}, "depends_on": {"type": "array", "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,95}$"}}}}
+  }
+}

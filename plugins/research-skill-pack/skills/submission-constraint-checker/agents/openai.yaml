@@ -1,0 +1,6 @@
+interface:
+  display_name: "Submission Constraint Checker"
+  short_description: "检查投稿格式与声明约束"
+  default_prompt: "Use $submission-constraint-checker for my chosen venue."
+policy:
+  allow_implicit_invocation: false

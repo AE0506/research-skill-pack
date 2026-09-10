@@ -1,0 +1,7 @@
+interface:
+  display_name: "变量字典构建"
+  short_description: "定义自变量、因变量、中介/调节、控制变量、类型、取值和来源。"
+  default_prompt: "Use $variable-dictionary-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

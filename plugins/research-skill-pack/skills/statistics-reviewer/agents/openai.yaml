@@ -1,0 +1,6 @@
+interface:
+  display_name: "Statistics Reviewer"
+  short_description: "模拟统计审稿"
+  default_prompt: "Use $statistics-reviewer on my verified analysis."
+policy:
+  allow_implicit_invocation: false

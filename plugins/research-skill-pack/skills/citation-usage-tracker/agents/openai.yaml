@@ -1,0 +1,7 @@
+interface:
+  display_name: "引用使用追踪"
+  short_description: "建立 Paper/Claim 到章节、段落与手稿主张的使用链路。"
+  default_prompt: "Use $citation-usage-tracker for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

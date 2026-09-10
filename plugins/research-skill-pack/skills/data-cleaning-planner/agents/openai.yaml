@@ -1,0 +1,7 @@
+interface:
+  display_name: "数据清洗计划"
+  short_description: "在不读取原始记录的前提下定义缺失、异常、编码、排除和可复现清洗规则。"
+  default_prompt: "Use $data-cleaning-planner for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

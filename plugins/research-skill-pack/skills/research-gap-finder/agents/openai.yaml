@@ -1,0 +1,6 @@
+interface:
+  display_name: "研究空白发现"
+  short_description: "从本地证据生成可核验的研究空白"
+  default_prompt: "Use $research-gap-finder to turn my local literature evidence into traceable Gap Cards."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研时间偏差监控"
+  short_description: "对比计划与实际并标记延期风险"
+  default_prompt: "Use $timeline-drift-monitor to check whether my research timeline is on track."
+policy:
+  allow_implicit_invocation: false

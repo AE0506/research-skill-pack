@@ -1,0 +1,30 @@
+schema_version: "0.2"
+project_id: timeline-ai-behavior
+profile: zh-undergrad-information-management-empirical
+title: 生成式 AI 使用与大学生信息搜寻行为
+current_state: design_ready
+writer_mode: single_user_serial
+write_sequence: 5
+security:
+  sensitive_data_model_access: forbidden_by_default
+  external_submission: forbidden
+  raw_data_policy: register_only
+timeline:
+  contract_status: execution_active
+  last_checked_at: "2026-09-12T09:00:00Z"
+  active_timeline_artifact_id: execution-timeline-001
+  timeline_health: on_track
+state_history:
+  - {sequence: 0, state: intake_draft, at: "2026-09-10T08:00:00Z", changed_by: user, reason: 初始化项目}
+  - {sequence: 1, state: intake_confirmed, at: "2026-09-10T08:30:00Z", changed_by: user, reason: 用户确认背景和时间基线}
+  - {sequence: 2, state: topic_assessed, at: "2026-09-10T09:00:00Z", changed_by: skill, reason: 选题已评估}
+  - {sequence: 3, state: gap_ready, at: "2026-09-10T10:00:00Z", changed_by: skill, reason: 空白卡已生成}
+  - {sequence: 4, state: board_decided, at: "2026-09-11T10:00:00Z", changed_by: user, reason: 用户确认条件通过}
+  - {sequence: 5, state: design_ready, at: "2026-09-12T09:00:00Z", changed_by: user, reason: 用户确认执行计划}
+user_overrides: []
+artifact_index:
+  - {id: context-brief-001, type: context_brief, path: artifacts/context-brief-001.yaml, version: 1, status: confirmed, created_at: "2026-09-10T08:20:00Z", created_by: skill, depends_on: [], supersedes: null, change_reason: 初次背景访谈后生成}
+  - {id: timeline-baseline-001, type: timeline_baseline, path: artifacts/timeline-baseline-001.yaml, version: 1, status: confirmed, created_at: "2026-09-10T08:25:00Z", created_by: skill, depends_on: [context-brief-001], supersedes: null, change_reason: 用户确认选题前时间约束}
+  - {id: board-decision-001, type: board_decision, path: artifacts/board-decision-001.yaml, version: 1, status: confirmed, created_at: "2026-09-11T09:30:00Z", created_by: skill, depends_on: [context-brief-001, timeline-baseline-001], supersedes: null, change_reason: 多角色评审后等待用户确认}
+  - {id: research-protocol-001, type: research_protocol, path: artifacts/research-protocol-001.yaml, version: 1, status: draft, created_at: "2026-09-11T11:00:00Z", created_by: skill, depends_on: [board-decision-001], supersedes: null, change_reason: 将通过的问题转为研究方案}
+  - {id: execution-timeline-001, type: execution_timeline, path: artifacts/execution-timeline-001.yaml, version: 1, status: confirmed, created_at: "2026-09-12T08:45:00Z", created_by: skill, depends_on: [research-protocol-001, timeline-baseline-001], supersedes: null, change_reason: 用户确认研究执行里程碑}
