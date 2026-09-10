@@ -333,7 +333,7 @@ _图 4：科研技能包架构。_
   </tbody>
 </table>
 
-完整的“概念—子流程—Skill—输入—输出—状态闸门—测试”映射在 [Skill Catalog](plugins/research-skill-pack/shared/skill-catalog-v0.2.yaml) 中。它是产品需求和实现之间的共同真源，而不是只写在 README 里的愿景。
+设计阶段的“概念—子流程—预期输入—输出—状态闸门—验收编号”映射在 [Skill Catalog](plugins/research-skill-pack/shared/skill-catalog-v0.2.yaml) 中。这里的验收编号是需求追踪标签，**不是**逐项可执行测试的名称；当前实现与 Catalog 的逐项对齐仍在整理中，可用校验命令查看差异。
 
 ---
 
@@ -571,9 +571,12 @@ No Verified Manuscript, No Submission.
 git clone https://github.com/AE0506/research-skill-pack.git
 cd research-skill-pack
 
-codex plugins marketplace add "$PWD" --name research-skill-pack-local
-codex plugins install research-skill-pack@research-skill-pack-local
+codex plugin marketplace add "$PWD"
+codex plugin add research-skill-pack@research-local
+codex plugin list
 ```
+
+以上命令已按当前 Codex CLI 的 `plugin` 子命令核对；最后一行应显示 `research-skill-pack@research-local` 为 `installed, enabled`。安装只验证插件被发现和启用，不等同于模型在真实论文项目中的端到端效果验证。
 
 重启或新建 Codex 对话后：
 
@@ -607,11 +610,15 @@ codex plugins install research-skill-pack@research-skill-pack-local
 
 它更像一套可以持续演化的“科研工作单元操作系统”，而不是一个一次性论文生成器。未来可以为不同学科、实验模式和机构规范增加新的 profile 与 provider，但这些扩展必须继续遵守同一套证据、隐私、确认与版本化原则。
 
+### 授权状态
+
+当前仓库尚未附带开源许可证。阅读源码不等于获得复制、修改或分发授权；在作者加入明确许可证前，请先取得著作权人的许可。许可证类型会影响真实用户和贡献者的权利，因此不会由工具擅自替作者决定。
+
 ## 项目结构
 
 ```text
 plugins/research-skill-pack/
-├── plugin.yaml                 # 插件清单
+├── .codex-plugin/plugin.json   # 插件清单
 ├── skills/                     # 总入口、宏观 Skill 与 170+ 细粒度工作单元
 ├── shared/                     # 项目 schema、状态机、Skill Catalog、共享契约
 ├── scripts/                    # 校验、迁移与本地检查工具
@@ -621,12 +628,16 @@ plugins/research-skill-pack/
 
 ## 验证与贡献
 
-本仓库包含针对 schema、artifact、状态闸门、迁移、时间线与安全边界的测试。合成 fixtures 仅用于验证插件行为，绝不能进入真实论文或作为研究数据。
+本仓库包含针对 schema、artifact、状态闸门、迁移、时间线与安全边界的可执行测试。`validate_plugin.py` 还会校验插件清单、所有 Skill 的可发现元数据和两套合成 fixtures。合成 fixtures 仅用于验证本地契约，绝不能进入真实论文或作为研究数据。
 
 ```bash
-pytest -q
-python plugins/research-skill-pack/scripts/validate_plugin.py
+cd plugins/research-skill-pack
+python3 -m pytest -q
+python3 scripts/validate_plugin.py
+python3 scripts/validate_plugin.py --catalog-report
 ```
+
+目前已验证：插件本地发现/启用、结构校验和项目契约测试。尚未验证：用真实研究资料完成一次人工复核的全流程，以及 Catalog 每个设计条目对应一个独立自动化测试。后两项在完成前不应被表述为已具备的能力。
 
 欢迎通过 Issue 讨论新的学科 profile、研究工作单元与文档改进；任何贡献都不能削弱真实数据、来源核验、用户确认与作者责任这四条底线。
 

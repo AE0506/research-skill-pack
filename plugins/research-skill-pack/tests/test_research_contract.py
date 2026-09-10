@@ -10,6 +10,7 @@ import yaml
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PLUGIN_ROOT / "scripts"))
 import research_contract as contract  # noqa: E402
+import validate_plugin  # noqa: E402
 
 
 FIXTURE = PLUGIN_ROOT / "fixtures" / "valid-project"
@@ -274,3 +275,14 @@ def test_project_generated_artifact_cannot_self_authorize_claim(tmp_path: Path) 
     content["manuscript_eligibility"] = "claim_eligible"
     write_yaml(context, content)
     assert "self_verified_generation" in finding_codes(project)
+
+
+def test_plugin_package_structure_and_synthetic_fixtures_validate() -> None:
+    assert validate_plugin.validate_plugin() == []
+
+
+def test_plugin_validator_rejects_missing_skill_front_matter(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    (plugin_root / "skills/research-radar/SKILL.md").write_text("# missing metadata\n", encoding="utf-8")
+    assert "invalid_skill_front_matter" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
