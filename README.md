@@ -4,17 +4,29 @@
 
 Research Skill Pack 是一个运行在 **ChatGPT Desktop Codex** 中的个人本地插件。它不是“输入题目，生成一篇论文”的工具；它把一篇论文拆回它本来就该有的样子：一连串需要人确认、需要证据支撑、需要经得起追问的研究决定。
 
-<table>
-  <tr>
-    <td align="center"><b>先理解人</b><br>学校、专业、导师、能力、时间与资源</td>
-    <td align="center">→</td>
-    <td align="center"><b>再判断题</b><br>方向机会、研究空白、可行性与风险</td>
-    <td align="center">→</td>
-    <td align="center"><b>再建立证据</b><br>文献、设计、真实数据、结果与引用</td>
-    <td align="center">→</td>
-    <td align="center"><b>最后组织论文</b><br>论证、写作、审计、返修与归档</td>
-  </tr>
-</table>
+```mermaid
+flowchart LR
+    accTitle: Research Skill Pack overview
+    accDescr: A research project moves from understanding the researcher through topic decisions and evidence building to an auditable manuscript and archive, with integrity checks before writing and submission.
+
+    researcher([👤 Understand researcher]) --> topic[🔍 Judge topic]
+    topic --> evidence[📚 Build evidence]
+    evidence --> argument[📝 Build argument]
+    argument --> manuscript[✍️ Draft manuscript]
+    manuscript --> guard{🛡️ Pass audit?}
+    guard -->|Revise| argument
+    guard -->|Ready| archive([🏁 Archive research])
+
+    classDef primary fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef evidence_style fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
+    classDef decision fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12
+    classDef success fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+
+    class researcher,topic primary
+    class evidence,argument,manuscript evidence_style
+    class guard decision
+    class archive success
+```
 
 它的目标不是替研究者“完成论文”，而是帮助研究者把每一个关键选择留在正确的位置：什么已经证实、什么只是推测、什么必须由本人确认、下一步最值得做什么。
 
@@ -79,6 +91,47 @@ Research Skill Pack 就是为这条链设计的。
 ---
 
 ## 12 个主阶段：每一步为什么存在，又留下些什么
+
+```mermaid
+flowchart LR
+    accTitle: Twelve research stages
+    accDescr: The twelve main research stages are grouped into four readable phases, with the 8.5 traceability gate placed between writing and citation review.
+
+    subgraph establish["📋 立项：先确定值得做什么"]
+        stage_1[1 Context and radar] --> stage_2[2 Find gap] --> stage_3[3 Review board]
+    end
+
+    subgraph prove["📚 证据：再确定凭什么做"]
+        stage_4[4 Literature OS] --> stage_5[5 Research design] --> stage_6[6 Data and evidence]
+    end
+
+    subgraph write["📝 论证：让研究形成论文"]
+        stage_7[7 Paper architect] --> stage_8[8 Academic writing] --> stage_85{8.5 Traceability gate} --> stage_9[9 Citation guard] --> stage_10[10 Reviewer simulator]
+    end
+
+    subgraph deliver["🏁 去向：准备提交并留下档案"]
+        stage_11[11 Venue matcher] --> stage_12[12 Submission and archive]
+    end
+
+    stage_3 --> stage_4
+    stage_6 --> stage_7
+    stage_10 --> stage_11
+
+    classDef establish_style fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef evidence_style fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
+    classDef writing_style fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
+    classDef decision fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12
+    classDef delivery_style fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+
+    class stage_1,stage_2,stage_3 establish_style
+    class stage_4,stage_5,stage_6 evidence_style
+    class stage_7,stage_8,stage_9,stage_10 writing_style
+    class stage_85 decision
+    class stage_11,stage_12 delivery_style
+```
+
+<details>
+<summary><strong>📋 展开阅读：12 个阶段各自解决什么、留下什么</strong></summary>
 
 ### 1. Research Radar｜选题雷达（含 Research Context Intake）
 
@@ -250,6 +303,8 @@ Citation Guard 从句子和段落出发检查：这句话需要外部引用吗�
 
 **它防止：**返修时找不到当初为何这样写、提交前才发现表格与正文不一致、或把作者责任交给自动化工具。
 
+</details>
+
 ---
 
 ## 一条贯穿始终的第二主线：Research Timeline & Milestone OS
@@ -258,18 +313,35 @@ Citation Guard 从句子和段落出发检查：这句话需要外部引用吗�
 
 因此，时间管理不是 Intake 里一个“最终截止日期”字段，而是一条和研究状态机并行的主线。
 
-```text
-最终提交日期
-  ↓ 倒排
-学院/导师硬节点与缓冲
-  ↓ 校准
-真实周容量、不可用时间、数据与反馈周期
-  ↓ 生成
-执行里程碑、依赖图、关键路径与每周任务包
-  ↓ 对照
-用户确认的进度 + 已存在的项目 artifact
-  ↓
-当前在哪？下一步是什么？是否需要重排？
+```mermaid
+flowchart TB
+    accTitle: Timeline operating system
+    accDescr: The timeline system turns deadlines, real weekly capacity, and dependencies into confirmed milestones and weekly actions, then compares them with confirmed progress before proposing a replan.
+
+    deadline([⏰ Final deadline]) --> ladder[📋 Build deadline ladder]
+    constraints[👤 Capacity and unavailable dates] --> baseline[⚙️ Confirm timeline baseline]
+    ladder --> baseline
+    baseline --> plan[📝 Build execution plan]
+    plan --> critical_path[🔗 Find critical path]
+    critical_path --> weekly[🎯 Plan this week]
+    weekly --> check_in[📊 Compare confirmed progress]
+    check_in --> drift{🔍 On track?}
+    drift -->|Yes| weekly
+    drift -->|No| rebaseline[✏️ Propose rebaseline]
+    rebaseline --> approval{👤 User confirms?}
+    approval -->|Yes| plan
+    approval -->|No| weekly
+
+    classDef input fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef process fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
+    classDef decision fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12
+    classDef action fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
+
+    class deadline,constraints input
+    class ladder,baseline,plan,critical_path,weekly,check_in process
+    class drift,approval decision
+    class rebaseline action
+```
 ```
 
 Timeline OS 包含时间信息采集、截止梯生成、真实容量评估、选题前 Baseline、执行计划、依赖/关键路径分析、周行动计划、下一步导航、偏移监测、重排方案与提交就绪检查。
@@ -300,6 +372,29 @@ Timeline OS 包含时间信息采集、截止梯生成、真实容量评估、�
 </table>
 
 目前 Skill Pack 中有 **170+ 个细粒度工作单元**。数量不是为了显得复杂，而是为了让每一个关键判断都拥有自己的：前置条件、输入、输出 artifact、状态影响、失败/阻断行为和验收用例。
+
+```mermaid
+flowchart TB
+    accTitle: Skill pack architecture
+    accDescr: One orchestrator routes a project to stable macro stage skills, while more than 170 explicit micro skills produce versioned and checkable artifacts in the local project record.
+
+    user([👤 Researcher]) --> orchestrator[🧠 Research orchestrator]
+    orchestrator --> macro[📋 Macro stage skills]
+    macro --> micro[⚙️ 170 plus micro skills]
+    micro --> artifacts[(💾 Versioned artifacts)]
+    artifacts --> project[(💾 project.yaml)]
+    project --> orchestrator
+
+    classDef human fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef route fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
+    classDef work fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
+    classDef storage fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+
+    class user human
+    class orchestrator,macro route
+    class micro work
+    class artifacts,project storage
+```
 
 例如，“第一步选题”并不是一个任务，而至少包含：
 
@@ -368,10 +463,33 @@ Timeline OS 包含时间信息采集、截止梯生成、真实容量评估、�
 
 状态机让项目不再只是“一个聊天窗口”。它会沿着下列阶段前进，并在需要时明确停下：
 
-```text
-intake_draft → intake_confirmed → topic_assessed → gap_ready → board_decided
-→ design_ready → evidence_ready → blueprint_ready → manuscript_audited
-→ review_ready → venue_ready → submission_ready → archived
+```mermaid
+stateDiagram-v2
+    accTitle: Research project lifecycle
+    accDescr: A project progresses from draft intake through topic, evidence, manuscript, review, venue, and submission preparation to archive, while pivot, kill, and blocked remain explicit states.
+
+    [*] --> IntakeDraft: 📥 Create project
+    IntakeDraft --> IntakeConfirmed: 👤 Confirm context and timeline
+    IntakeConfirmed --> TopicAssessed: 🔍 Assess topic
+    TopicAssessed --> GapReady: 📚 Verify gap
+    GapReady --> BoardDecided: 👥 Confirm board decision
+    BoardDecided --> DesignReady: ⚙️ Confirm protocol and plan
+    DesignReady --> EvidenceReady: 📊 Verify evidence package
+    EvidenceReady --> BlueprintReady: 📝 Build argument tree
+    BlueprintReady --> ManuscriptAudited: 🛡️ Audit manuscript
+    ManuscriptAudited --> ReviewReady: 🔍 Simulate review
+    ReviewReady --> VenueReady: 🎯 Verify venue information
+    VenueReady --> SubmissionReady: 👤 Confirm submission package
+    SubmissionReady --> Archived: 🏁 Archive project
+
+    TopicAssessed --> Pivot: ✏️ Change direction
+    BoardDecided --> Kill: ❌ Fatal flaw
+    IntakeDraft --> Blocked: ⚠️ Missing requirement
+    DesignReady --> Blocked: ⚠️ Missing dependency
+    Blocked --> IntakeDraft: 🔄 Resolve issue
+    Pivot --> TopicAssessed: 🔄 Reassess
+    Archived --> [*]
+    Kill --> [*]
 ```
 
 `PIVOT`、`KILL` 与 `blocked` 是诚实的独立状态，而不是失败被藏起来。用户当然可以覆盖建议，但该覆盖及其理由会留下记录，依赖该决定的下游产物会被标为 `advisory_only`。
