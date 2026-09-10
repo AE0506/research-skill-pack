@@ -1,0 +1,6 @@
+interface:
+  display_name: "研究生命周期判断"
+  short_description: "依据本地日期证据判断领域发展阶段"
+  default_prompt: "Use $research-lifecycle-assessor to assess my field's research lifecycle."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Template Language Risk Auditor"
+  short_description: "识别模板化和空洞学术表达"
+  default_prompt: "Use $template-language-risk-auditor on my manuscript draft."
+policy:
+  allow_implicit_invocation: false

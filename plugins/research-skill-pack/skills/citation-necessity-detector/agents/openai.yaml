@@ -1,0 +1,6 @@
+interface:
+  display_name: "Citation Necessity Detector"
+  short_description: "识别需要外部引用的句子"
+  default_prompt: "Use $citation-necessity-detector on my manuscript section."
+policy:
+  allow_implicit_invocation: false

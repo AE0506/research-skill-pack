@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://research-skill-pack.local/schemas/project-v0.1.json",
-  "title": "Research Project Contract v0.1",
+  "$id": "https://research-skill-pack.local/schemas/project-v0.2.json",
+  "title": "Research Project Contract v0.2 (v0.1 compatible)",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "project_id", "profile", "title", "current_state", "writer_mode", "write_sequence", "artifact_index", "state_history", "security"],
   "properties": {
-    "schema_version": {"const": "0.1"},
-    "project_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$"},
+    "schema_version": {"enum": ["0.1", "0.2"]},
+    "project_id": {"$ref": "#/$defs/id"},
     "profile": {"const": "zh-undergrad-information-management-empirical"},
     "title": {"type": "string", "minLength": 1},
     "current_state": {"$ref": "#/$defs/state"},
@@ -17,65 +17,25 @@
     "state_history": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/stateHistory"}},
     "user_overrides": {"type": "array", "items": {"$ref": "#/$defs/userOverride"}},
     "security": {"$ref": "#/$defs/security"},
-    "providers": {"type": "array", "items": {"$ref": "#/$defs/provider"}}
+    "providers": {"type": "array", "items": {"$ref": "#/$defs/provider"}},
+    "timeline": {"$ref": "#/$defs/timelineProject"},
+    "migration": {"$ref": "#/$defs/migration"}
   },
+  "allOf": [{"if": {"properties": {"schema_version": {"const": "0.2"}}}, "then": {"required": ["timeline"]}}],
   "$defs": {
     "timestamp": {"type": "string", "format": "date-time"},
     "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,95}$"},
     "state": {"enum": ["intake_draft", "intake_confirmed", "topic_assessed", "gap_ready", "board_decided", "design_ready", "evidence_ready", "blueprint_ready", "manuscript_audited", "review_ready", "venue_ready", "submission_ready", "archived", "PIVOT", "KILL", "blocked"]},
-    "artifactIndex": {
-      "type": "object", "additionalProperties": false,
-      "required": ["id", "type", "path", "version", "status", "created_at", "created_by", "depends_on", "supersedes", "change_reason"],
-      "properties": {
-        "id": {"$ref": "#/$defs/id"},
-        "type": {"enum": ["context_brief", "topic_assessment", "gap_card", "board_decision", "source", "evidence", "claim", "research_protocol", "variable_dictionary", "raw_data_register", "processed_data", "analysis_run", "verified_evidence_package", "argument_tree", "claim_graph", "manuscript_blueprint", "manuscript_draft", "originality_report", "citation_audit", "review_report", "review_response", "venue_assessment", "submission_package", "archive_manifest"]},
-        "path": {"type": "string", "pattern": "^artifacts/[a-z0-9][a-z0-9_./-]*\\.ya?ml$"},
-        "version": {"type": "integer", "minimum": 1},
-        "status": {"enum": ["draft", "confirmed", "verified", "advisory_only", "superseded", "rejected", "blocked"]},
-        "created_at": {"$ref": "#/$defs/timestamp"},
-        "created_by": {"enum": ["user", "skill", "import", "migration"]},
-        "depends_on": {"type": "array", "items": {"$ref": "#/$defs/id"}},
-        "supersedes": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9-]{2,95}$"},
-        "change_reason": {"type": "string", "minLength": 1}
-      }
-    },
-    "stateHistory": {
-      "type": "object", "additionalProperties": false,
-      "required": ["sequence", "state", "at", "changed_by", "reason"],
-      "properties": {
-        "sequence": {"type": "integer", "minimum": 0},
-        "state": {"$ref": "#/$defs/state"},
-        "at": {"$ref": "#/$defs/timestamp"},
-        "changed_by": {"enum": ["user", "skill", "migration"]},
-        "reason": {"type": "string", "minLength": 1}
-      }
-    },
-    "userOverride": {
-      "type": "object", "additionalProperties": false,
-      "required": ["id", "at", "reason", "target_artifact_id", "effect"],
-      "properties": {
-        "id": {"$ref": "#/$defs/id"}, "at": {"$ref": "#/$defs/timestamp"},
-        "reason": {"type": "string", "minLength": 1}, "target_artifact_id": {"$ref": "#/$defs/id"},
-        "effect": {"const": "downstream_advisory_only"}
-      }
-    },
-    "security": {
-      "type": "object", "additionalProperties": false,
-      "required": ["sensitive_data_model_access", "external_submission", "raw_data_policy"],
-      "properties": {
-        "sensitive_data_model_access": {"const": "forbidden_by_default"},
-        "external_submission": {"const": "forbidden"},
-        "raw_data_policy": {"const": "register_only"}
-      }
-    },
-    "provider": {
-      "type": "object", "additionalProperties": false,
-      "required": ["id", "kind", "status"],
-      "properties": {
-        "id": {"$ref": "#/$defs/id"},
-        "kind": {"enum": ["bibliography", "metadata", "fulltext", "dataset", "venue"]},
-        "status": {"const": "not_configured"}
-      }
-    }
+    "artifactIndex": {"type": "object", "additionalProperties": false, "required": ["id", "type", "path", "version", "status", "created_at", "created_by", "depends_on", "supersedes", "change_reason"], "properties": {
+      "id": {"$ref": "#/$defs/id"},
+      "type": {"enum": ["context_brief", "timeline_baseline", "execution_timeline", "progress_checkin", "timeline_rebaseline", "deadline_readiness_report", "topic_assessment", "gap_card", "board_decision", "source", "evidence", "claim", "research_protocol", "variable_dictionary", "raw_data_register", "processed_data", "analysis_run", "verified_evidence_package", "argument_tree", "claim_graph", "manuscript_blueprint", "manuscript_draft", "originality_report", "citation_audit", "review_report", "review_response", "venue_assessment", "submission_package", "archive_manifest"]},
+      "path": {"type": "string", "pattern": "^artifacts/[a-z0-9][a-z0-9_./-]*\\.ya?ml$"}, "version": {"type": "integer", "minimum": 1}, "status": {"enum": ["draft", "confirmed", "verified", "advisory_only", "superseded", "rejected", "blocked"]}, "created_at": {"$ref": "#/$defs/timestamp"}, "created_by": {"enum": ["user", "skill", "import", "migration"]}, "depends_on": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "supersedes": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9-]{2,95}$"}, "change_reason": {"type": "string", "minLength": 1}
+    }},
+    "stateHistory": {"type": "object", "additionalProperties": false, "required": ["sequence", "state", "at", "changed_by", "reason"], "properties": {"sequence": {"type": "integer", "minimum": 0}, "state": {"$ref": "#/$defs/state"}, "at": {"$ref": "#/$defs/timestamp"}, "changed_by": {"enum": ["user", "skill", "migration"]}, "reason": {"type": "string", "minLength": 1}}},
+    "userOverride": {"type": "object", "additionalProperties": false, "required": ["id", "at", "reason", "target_artifact_id", "effect"], "properties": {"id": {"$ref": "#/$defs/id"}, "at": {"$ref": "#/$defs/timestamp"}, "reason": {"type": "string", "minLength": 1}, "target_artifact_id": {"$ref": "#/$defs/id"}, "effect": {"const": "downstream_advisory_only"}}},
+    "security": {"type": "object", "additionalProperties": false, "required": ["sensitive_data_model_access", "external_submission", "raw_data_policy"], "properties": {"sensitive_data_model_access": {"const": "forbidden_by_default"}, "external_submission": {"const": "forbidden"}, "raw_data_policy": {"const": "register_only"}}},
+    "provider": {"type": "object", "additionalProperties": false, "required": ["id", "kind", "status"], "properties": {"id": {"$ref": "#/$defs/id"}, "kind": {"enum": ["bibliography", "metadata", "fulltext", "dataset", "venue"]}, "status": {"const": "not_configured"}}},
+    "timelineProject": {"type": "object", "additionalProperties": false, "required": ["contract_status", "last_checked_at"], "properties": {"contract_status": {"enum": ["needs_baseline", "baseline_confirmed", "execution_active"]}, "last_checked_at": {"$ref": "#/$defs/timestamp"}, "active_timeline_artifact_id": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9-]{2,95}$"}, "timeline_health": {"enum": ["unknown", "on_track", "at_risk", "overdue", "blocked"]}}},
+    "migration": {"type": "object", "additionalProperties": false, "required": ["source_schema_version", "migrated_at", "migration_status", "prior_current_state"], "properties": {"source_schema_version": {"const": "0.1"}, "migrated_at": {"$ref": "#/$defs/timestamp"}, "migration_status": {"const": "needs_timeline_baseline"}, "prior_current_state": {"$ref": "#/$defs/state"}}}
   }
 }

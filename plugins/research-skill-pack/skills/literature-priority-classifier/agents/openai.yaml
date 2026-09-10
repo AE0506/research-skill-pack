@@ -1,0 +1,7 @@
+interface:
+  display_name: "阅读优先级分类"
+  short_description: "把文献分为必读、重点、结构化阅读、背景或排除，说明理由。"
+  default_prompt: "Use $literature-priority-classifier for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

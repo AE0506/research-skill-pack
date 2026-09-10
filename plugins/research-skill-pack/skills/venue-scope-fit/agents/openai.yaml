@@ -1,0 +1,6 @@
+interface:
+  display_name: "Venue Scope Fit"
+  short_description: "核验论文与期刊范围匹配"
+  default_prompt: "Use $venue-scope-fit for my verified venue data."
+policy:
+  allow_implicit_invocation: false

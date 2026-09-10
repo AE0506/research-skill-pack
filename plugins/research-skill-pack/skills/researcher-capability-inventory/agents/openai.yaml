@@ -1,0 +1,6 @@
+interface:
+  display_name: "研究者能力盘点"
+  short_description: "记录真实能力、经验与待补足项"
+  default_prompt: "Use $researcher-capability-inventory to assess my research capabilities."
+policy:
+  allow_implicit_invocation: false

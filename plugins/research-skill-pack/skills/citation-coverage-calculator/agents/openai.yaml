@@ -1,0 +1,6 @@
+interface:
+  display_name: "Citation Coverage Calculator"
+  short_description: "计算可审计的引用覆盖"
+  default_prompt: "Use $citation-coverage-calculator on my citation audit results."
+policy:
+  allow_implicit_invocation: false

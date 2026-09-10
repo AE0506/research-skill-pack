@@ -1,0 +1,6 @@
+interface:
+  display_name: "截止梯构建"
+  short_description: "从最终提交日倒排科研关键节点"
+  default_prompt: "Use $deadline-ladder-builder to plan backwards from my submission deadline."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Citation Risk Heatmap"
+  short_description: "定位正文中的引用风险热点"
+  default_prompt: "Use $citation-risk-heatmap after my citation audits."
+policy:
+  allow_implicit_invocation: false

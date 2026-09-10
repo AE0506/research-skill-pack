@@ -1,0 +1,7 @@
+interface:
+  display_name: "结果核验"
+  short_description: "核对运行记录、输出定位、数据版本和报告数字之间的一致性。"
+  default_prompt: "Use $result-verifier for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

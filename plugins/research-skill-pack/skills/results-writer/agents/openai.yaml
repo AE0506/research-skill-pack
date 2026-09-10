@@ -1,0 +1,6 @@
+interface:
+  display_name: "Results Writer"
+  short_description: "从已核验分析结果起草结果章节"
+  default_prompt: "Use $results-writer for my verified analysis package."
+policy:
+  allow_implicit_invocation: false

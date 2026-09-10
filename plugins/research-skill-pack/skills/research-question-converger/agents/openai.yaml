@@ -1,0 +1,7 @@
+interface:
+  display_name: "研究问题收敛"
+  short_description: "比较候选问题的清晰度、可测量性、范围与约束匹配，形成建议问题。"
+  default_prompt: "Use $research-question-converger for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Paragraph Substance Analyzer"
+  short_description: "评估段落证据与论证密度"
+  default_prompt: "Use $paragraph-substance-analyzer on my selected paragraph."
+policy:
+  allow_implicit_invocation: false

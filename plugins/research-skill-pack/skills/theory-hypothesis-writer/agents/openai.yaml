@@ -1,0 +1,6 @@
+interface:
+  display_name: "Theory and Hypothesis Writer"
+  short_description: "从理论机制起草假设章节"
+  default_prompt: "Use $theory-hypothesis-writer for my approved theoretical model."
+policy:
+  allow_implicit_invocation: false

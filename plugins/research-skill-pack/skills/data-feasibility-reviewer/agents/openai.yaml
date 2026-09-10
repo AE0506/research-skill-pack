@@ -1,0 +1,7 @@
+interface:
+  display_name: "数据可行性审稿"
+  short_description: "审查真实数据、样本、访问权限与数据质量是否可获得。"
+  default_prompt: "Use $data-feasibility-reviewer for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

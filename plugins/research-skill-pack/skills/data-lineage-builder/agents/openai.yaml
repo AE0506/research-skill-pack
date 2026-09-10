@@ -1,0 +1,7 @@
+interface:
+  display_name: "数据谱系构建"
+  short_description: "连接 Raw Register、清洗版本、分析运行、结果和图表，形成可回溯链路。"
+  default_prompt: "Use $data-lineage-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

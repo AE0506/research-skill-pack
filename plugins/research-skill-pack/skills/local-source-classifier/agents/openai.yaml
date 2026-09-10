@@ -1,0 +1,6 @@
+interface:
+  display_name: "本地资料分类"
+  short_description: "检查导入资料的格式、身份与可用性"
+  default_prompt: "Use $local-source-classifier to classify my local research files."
+policy:
+  allow_implicit_invocation: false

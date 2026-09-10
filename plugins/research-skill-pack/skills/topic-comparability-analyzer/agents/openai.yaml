@@ -1,0 +1,6 @@
+interface:
+  display_name: "选题可比性分析"
+  short_description: "说明候选题的重叠、差异与未知项"
+  default_prompt: "Use $topic-comparability-analyzer to compare my topic candidates."
+policy:
+  allow_implicit_invocation: false

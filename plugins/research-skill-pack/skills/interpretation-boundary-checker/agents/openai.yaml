@@ -1,0 +1,7 @@
+interface:
+  display_name: "解释边界检查"
+  short_description: "限定可推广人群、情境、测量、时间与不确定性。"
+  default_prompt: "Use $interpretation-boundary-checker for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

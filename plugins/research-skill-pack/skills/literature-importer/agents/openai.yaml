@@ -1,0 +1,7 @@
+interface:
+  display_name: "文献入库"
+  short_description: "将用户主动提供的 PDF、DOI、BibTeX、RIS、CSV 或人工元数据登记为可追溯的 Source/Paper 候选。"
+  default_prompt: "Use $literature-importer for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

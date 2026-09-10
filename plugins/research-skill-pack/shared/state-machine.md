@@ -1,6 +1,6 @@
-# Research State Machine v0.1
+# Research State Machine v0.2
 
-The normal project path is:
+The normal research state path remains:
 
 ```text
 intake_draft → intake_confirmed → topic_assessed → gap_ready → board_decided
@@ -8,23 +8,21 @@ intake_draft → intake_confirmed → topic_assessed → gap_ready → board_dec
 → review_ready → venue_ready → submission_ready → archived
 ```
 
-`PIVOT`, `KILL`, and `blocked` are explicit terminal-or-interruption states. `PIVOT` may return to `intake_draft`, `intake_confirmed`, `topic_assessed`, or `gap_ready` after a recorded reason. `KILL` cannot progress without a new Context Brief. `blocked` may resume the previously blocked normal state after its recovery condition is documented.
+Timeline health is a parallel value (`unknown`, `on_track`, `at_risk`, `overdue`, `blocked`), not a replacement for research readiness. A Skill can recommend a transition but never execute a user-confirmation gate itself.
 
-| State | Required artifact / condition | Next normal state |
-|---|---|---|
-| `intake_draft` | Context Brief draft permitted | `intake_confirmed` |
-| `intake_confirmed` | confirmed `context_brief` | `topic_assessed` |
-| `topic_assessed` | `topic_assessment` | `gap_ready` |
-| `gap_ready` | at least one `gap_card` | `board_decided` |
-| `board_decided` | confirmed `board_decision` with GO or CONDITIONAL GO | `design_ready` |
-| `design_ready` | `research_protocol` | `evidence_ready` |
-| `evidence_ready` | `verified_evidence_package` | `blueprint_ready` |
-| `blueprint_ready` | `manuscript_blueprint` | `manuscript_audited` |
-| `manuscript_audited` | `citation_audit` and `originality_report` | `review_ready` |
-| `review_ready` | `review_report` | `venue_ready` |
-| `venue_ready` | `venue_assessment` | `submission_ready` |
-| `submission_ready` | confirmed `submission_package` | `archived` |
-| `archived` | `archive_manifest` | — |
+| State | Required v0.2 gate |
+|---|---|
+| `intake_confirmed` | confirmed Context Brief **and** confirmed Timeline Baseline |
+| `topic_assessed` | Topic Assessment |
+| `gap_ready` | Gap Card |
+| `board_decided` | confirmed GO / CONDITIONAL GO Board Decision |
+| `design_ready` | Research Protocol **and** confirmed Execution Timeline |
+| `evidence_ready` | verified Evidence Package |
+| `blueprint_ready` | Manuscript Blueprint |
+| `manuscript_audited` | Citation Audit and Originality Report |
+| `review_ready` | Review Report |
+| `venue_ready` | Venue Assessment |
+| `submission_ready` | confirmed Submission Package and verified, human-checked, ready Deadline Readiness Report |
+| `archived` | Archive Manifest |
 
-The state sequence describes readiness, not automatic execution. A Skill may only propose a transition; confirmed gates need direct user confirmation.
-
+`PIVOT`, `KILL`, and `blocked` remain explicit interruption states. A rebaseline changes timing only; it does not certify academic progress. `blocked` resumes only after its documented recovery condition is met. A migrated v0.1 project preserves its historical state but enters `blocked` with `migration_status: needs_timeline_baseline`; it cannot resume until a confirmed baseline is present.

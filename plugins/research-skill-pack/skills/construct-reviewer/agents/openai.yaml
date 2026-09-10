@@ -1,0 +1,7 @@
+interface:
+  display_name: "构念审稿"
+  short_description: "审查构念定义、区分性、操作化一致性与测量风险。"
+  default_prompt: "Use $construct-reviewer for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

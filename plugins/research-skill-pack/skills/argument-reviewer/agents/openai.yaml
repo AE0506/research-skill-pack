@@ -1,0 +1,6 @@
+interface:
+  display_name: "Argument Reviewer"
+  short_description: "模拟论证链审稿"
+  default_prompt: "Use $argument-reviewer on my manuscript blueprint."
+policy:
+  allow_implicit_invocation: false

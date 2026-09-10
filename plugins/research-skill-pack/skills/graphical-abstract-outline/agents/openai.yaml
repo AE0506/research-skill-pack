@@ -1,0 +1,6 @@
+interface:
+  display_name: "Graphical Abstract Outline"
+  short_description: "规划图形摘要内容"
+  default_prompt: "Use $graphical-abstract-outline for my verified manuscript."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Predatory Venue Guard"
+  short_description: "识别掠夺性期刊风险"
+  default_prompt: "Use $predatory-venue-guard on a verified venue record."
+policy:
+  allow_implicit_invocation: false

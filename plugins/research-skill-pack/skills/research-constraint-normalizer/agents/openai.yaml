@@ -1,0 +1,6 @@
+interface:
+  display_name: "研究约束归一化"
+  short_description: "整合并暴露论文项目的硬软约束"
+  default_prompt: "Use $research-constraint-normalizer to organize my project constraints."
+policy:
+  allow_implicit_invocation: false

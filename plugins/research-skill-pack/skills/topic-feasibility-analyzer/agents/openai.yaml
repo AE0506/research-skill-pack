@@ -1,0 +1,6 @@
+interface:
+  display_name: "选题可行性分析"
+  short_description: "依据约束与时间基线评估候选题能否完成"
+  default_prompt: "Use $topic-feasibility-analyzer to assess whether my topic candidates are feasible."
+policy:
+  allow_implicit_invocation: false

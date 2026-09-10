@@ -1,0 +1,7 @@
+interface:
+  display_name: "图表登记"
+  short_description: "记录图表目的、数据/运行来源、版本、说明、可访问性与引用位置。"
+  default_prompt: "Use $figure-register for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

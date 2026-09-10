@@ -1,0 +1,6 @@
+interface:
+  display_name: "Citation Strength Assessor"
+  short_description: "评估引文支持强度与范围"
+  default_prompt: "Use $citation-strength-assessor for my linked claims."
+policy:
+  allow_implicit_invocation: false

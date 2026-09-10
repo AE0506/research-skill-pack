@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review Dependency Builder"
+  short_description: "建立审稿意见返修依赖图"
+  default_prompt: "Use $review-dependency-builder for my review cycle."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,6 @@
+interface:
+  display_name: "论文要求采集"
+  short_description: "把学校或学院要求转为可核验约束"
+  default_prompt: "Use $thesis-requirement-intake to capture my thesis requirements."
+policy:
+  allow_implicit_invocation: false

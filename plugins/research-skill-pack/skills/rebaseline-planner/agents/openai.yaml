@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研时间线重排"
+  short_description: "延期或变化后提出可确认的恢复方案"
+  default_prompt: "Use $rebaseline-planner to replan my research timeline after a change."
+policy:
+  allow_implicit_invocation: false

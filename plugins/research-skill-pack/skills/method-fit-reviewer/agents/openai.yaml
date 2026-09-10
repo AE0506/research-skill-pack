@@ -1,0 +1,7 @@
+interface:
+  display_name: "方法匹配审稿"
+  short_description: "审查拟议方法是否能回答问题，识别设计与推断不匹配。"
+  default_prompt: "Use $method-fit-reviewer for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

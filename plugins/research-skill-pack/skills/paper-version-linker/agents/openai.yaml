@@ -1,0 +1,7 @@
+interface:
+  display_name: "文献版本关联"
+  short_description: "关联预印本、会议版、期刊扩展版、更正与替代版本，避免重复计数。"
+  default_prompt: "Use $paper-version-linker for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

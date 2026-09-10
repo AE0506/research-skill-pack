@@ -1,0 +1,6 @@
+interface:
+  display_name: "Method Writer"
+  short_description: "从研究方案起草方法章节"
+  default_prompt: "Use $method-writer to draft my method section from the protocol."
+policy:
+  allow_implicit_invocation: false

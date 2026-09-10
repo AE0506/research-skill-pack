@@ -1,0 +1,7 @@
+interface:
+  display_name: "样本与招募规划"
+  short_description: "规划目标总体、抽样、纳入排除、样本量理由、招募与伦理限制。"
+  default_prompt: "Use $sampling-recruitment-planner for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

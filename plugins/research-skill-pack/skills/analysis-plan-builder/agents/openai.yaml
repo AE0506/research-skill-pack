@@ -1,0 +1,7 @@
+interface:
+  display_name: "分析计划构建"
+  short_description: "将问题/假设映射到数据字段、分析、诊断、报告和解释边界。"
+  default_prompt: "Use $analysis-plan-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

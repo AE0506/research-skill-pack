@@ -1,0 +1,7 @@
+interface:
+  display_name: "边际知识增量评估"
+  short_description: "评估新增文献对问题、理论、方法或冲突理解的独立增益。"
+  default_prompt: "Use $marginal-knowledge-gain-assessor for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

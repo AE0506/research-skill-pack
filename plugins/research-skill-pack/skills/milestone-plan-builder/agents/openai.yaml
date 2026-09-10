@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研里程碑计划"
+  short_description: "将已通过方案转为执行时间线"
+  default_prompt: "Use $milestone-plan-builder to create my research execution timeline."
+policy:
+  allow_implicit_invocation: false

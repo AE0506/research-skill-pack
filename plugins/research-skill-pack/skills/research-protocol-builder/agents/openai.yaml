@@ -1,0 +1,7 @@
+interface:
+  display_name: "研究方案构建"
+  short_description: "汇总已通过的设计 artifact 形成可执行且可审计的 Research Protocol 草案。"
+  default_prompt: "Use $research-protocol-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

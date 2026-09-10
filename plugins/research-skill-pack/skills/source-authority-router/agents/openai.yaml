@@ -1,0 +1,6 @@
+interface:
+  display_name: "研究来源权威路由"
+  short_description: "划分本地资料的权威性与可用边界"
+  default_prompt: "Use $source-authority-router to classify my imported research sources."
+policy:
+  allow_implicit_invocation: false

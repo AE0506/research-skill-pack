@@ -1,0 +1,6 @@
+interface:
+  display_name: "Submission Compliance Gate"
+  short_description: "投稿前合规闸门"
+  default_prompt: "Use $submission-compliance-gate before I confirm a package."
+policy:
+  allow_implicit_invocation: false

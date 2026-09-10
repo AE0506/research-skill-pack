@@ -1,0 +1,7 @@
+interface:
+  display_name: "研究范式选择"
+  short_description: "在默认社科实证 profile 下选择与问题匹配的研究范式并说明排除项。"
+  default_prompt: "Use $research-paradigm-selector for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

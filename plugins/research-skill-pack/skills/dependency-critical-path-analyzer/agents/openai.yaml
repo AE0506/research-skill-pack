@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研关键路径分析"
+  short_description: "识别依赖、等待项、缓冲与关键路径"
+  default_prompt: "Use $dependency-critical-path-analyzer to analyze my research timeline's critical path."
+policy:
+  allow_implicit_invocation: false

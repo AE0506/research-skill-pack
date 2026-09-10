@@ -1,0 +1,7 @@
+interface:
+  display_name: "研究问题指纹构建"
+  short_description: "为候选研究问题编码对象、关系、情境、理论、方法和结果指纹，用于比较聚类。"
+  default_prompt: "Use $research-question-fingerprinter for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Citation Diversity Auditor"
+  short_description: "检查引用证据集中风险"
+  default_prompt: "Use $citation-diversity-auditor on my manuscript references."
+policy:
+  allow_implicit_invocation: false

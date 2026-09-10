@@ -1,0 +1,6 @@
+interface:
+  display_name: "Manual Rewrite Queue Builder"
+  short_description: "把写作审计转为人工补写队列"
+  default_prompt: "Use $manual-rewrite-queue-builder to prioritize my draft fixes."
+policy:
+  allow_implicit_invocation: false

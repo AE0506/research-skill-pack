@@ -1,0 +1,7 @@
+interface:
+  display_name: "因果边界检查"
+  short_description: "检查设计、时间顺序、混杂与识别条件是否支持因果措辞。"
+  default_prompt: "Use $causal-boundary-checker for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

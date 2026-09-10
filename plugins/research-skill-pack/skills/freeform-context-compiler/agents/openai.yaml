@@ -1,0 +1,6 @@
+interface:
+  display_name: "自由备注编译"
+  short_description: "将个人备注转成待确认研究约束"
+  default_prompt: "Use $freeform-context-compiler to structure my research notes."
+policy:
+  allow_implicit_invocation: false

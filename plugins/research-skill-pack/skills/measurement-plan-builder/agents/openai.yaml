@@ -1,0 +1,7 @@
+interface:
+  display_name: "测量方案构建"
+  short_description: "为变量制定量表/题项/行为指标、信效度依据、计分与限制。"
+  default_prompt: "Use $measurement-plan-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

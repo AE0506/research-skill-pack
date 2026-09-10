@@ -1,0 +1,6 @@
+interface:
+  display_name: "Argument Unit Designer"
+  short_description: "构建可追溯论证单元"
+  default_prompt: "Use $argument-unit-designer for one manuscript claim."
+policy:
+  allow_implicit_invocation: false

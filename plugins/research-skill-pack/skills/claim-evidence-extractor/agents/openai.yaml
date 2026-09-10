@@ -1,0 +1,7 @@
+interface:
+  display_name: "命题级证据提取"
+  short_description: "把可定位论文内容拆为 Claim 与 Evidence，记录适用边界、方法和证据强度。"
+  default_prompt: "Use $claim-evidence-extractor for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

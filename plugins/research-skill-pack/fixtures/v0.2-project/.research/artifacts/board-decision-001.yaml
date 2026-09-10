@@ -1,0 +1,15 @@
+schema_version: "0.2"
+id: board-decision-001
+type: board_decision
+version: 1
+created_at: "2026-09-11T09:30:00Z"
+created_by: skill
+status: confirmed
+depends_on: [context-brief-001, timeline-baseline-001]
+supersedes: null
+change_reason: 多角色评审后等待用户确认
+provenance: project_generated
+verification_status: human_verified
+manuscript_eligibility: not_eligible
+confirmation: {confirmed_by: user, confirmed_at: "2026-09-11T10:00:00Z"}
+decision: CONDITIONAL_GO

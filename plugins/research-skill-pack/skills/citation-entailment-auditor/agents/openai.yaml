@@ -1,0 +1,6 @@
+interface:
+  display_name: "Citation Entailment Auditor"
+  short_description: "检查引文是否真正支撑主张"
+  default_prompt: "Use $citation-entailment-auditor on my claim-citation links."
+policy:
+  allow_implicit_invocation: false

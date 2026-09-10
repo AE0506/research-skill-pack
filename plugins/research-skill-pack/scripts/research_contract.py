@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Validate the local, versioned Research Skill Pack project contract.
+"""Validate and safely migrate local Research Skill Pack project metadata.
 
-This tool never contacts providers, reads registered raw-data paths, or mutates a
-project. It only reads YAML files already inside ``<project>/.research``.
+Validation never contacts providers, reads registered raw-data paths, or mutates
+a project. Migration creates a separate metadata-only v0.2 copy and deliberately
+does not copy ``.research/data`` or any raw data.
 """
 
 from __future__ import annotations
@@ -10,9 +11,10 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import shutil
 import sys
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -30,37 +32,37 @@ NORMAL_STATES = [
     "archived",
 ]
 SPECIAL_STATES = {"PIVOT", "KILL", "blocked"}
-GATES: dict[str, tuple[str, str | None]] = {
-    "intake_confirmed": ("context_brief", "confirmed"),
-    "topic_assessed": ("topic_assessment", None),
-    "gap_ready": ("gap_card", None),
-    "board_decided": ("board_decision", "confirmed"),
-    "design_ready": ("research_protocol", None),
-    "evidence_ready": ("verified_evidence_package", "verified"),
-    "blueprint_ready": ("manuscript_blueprint", None),
-    "manuscript_audited": ("citation_audit", None),
-    "review_ready": ("review_report", None),
-    "venue_ready": ("venue_assessment", None),
-    "submission_ready": ("submission_package", "confirmed"),
-    "archived": ("archive_manifest", None),
+V01_GATES: dict[str, tuple[tuple[str, str | None], ...]] = {
+    "intake_confirmed": (("context_brief", "confirmed"),),
+    "topic_assessed": (("topic_assessment", None),),
+    "gap_ready": (("gap_card", None),),
+    "board_decided": (("board_decision", "confirmed"),),
+    "design_ready": (("research_protocol", None),),
+    "evidence_ready": (("verified_evidence_package", "verified"),),
+    "blueprint_ready": (("manuscript_blueprint", None),),
+    "manuscript_audited": (("citation_audit", None), ("originality_report", None)),
+    "review_ready": (("review_report", None),),
+    "venue_ready": (("venue_assessment", None),),
+    "submission_ready": (("submission_package", "confirmed"),),
+    "archived": (("archive_manifest", None),),
 }
-FATAL_FLAWS = {
-    "core_data_unavailable",
-    "key_result_not_measurable",
-    "method_cannot_answer_question",
-    "unresolved_ethics_barrier",
+V02_GATES = {
+    **V01_GATES,
+    "intake_confirmed": (("context_brief", "confirmed"), ("timeline_baseline", "confirmed")),
+    "design_ready": (("research_protocol", None), ("execution_timeline", "confirmed")),
+    "submission_ready": (("submission_package", "confirmed"), ("deadline_readiness_report", "verified")),
 }
+CONFIRMATION_TYPES = {"context_brief", "timeline_baseline", "execution_timeline", "timeline_rebaseline", "board_decision", "submission_package"}
+TIMELINE_TYPES = {"timeline_baseline", "execution_timeline", "timeline_rebaseline"}
 
 
 class ContractLoader(yaml.SafeLoader):
-    """Safe YAML loader that preserves ISO timestamps as strings for the schema."""
+    """Safe YAML loader that keeps ISO date/time values as strings."""
 
 
 ContractLoader.yaml_implicit_resolvers = copy.deepcopy(yaml.SafeLoader.yaml_implicit_resolvers)
 for key, resolvers in list(ContractLoader.yaml_implicit_resolvers.items()):
-    ContractLoader.yaml_implicit_resolvers[key] = [
-        item for item in resolvers if item[0] != "tag:yaml.org,2002:timestamp"
-    ]
+    ContractLoader.yaml_implicit_resolvers[key] = [item for item in resolvers if item[0] != "tag:yaml.org,2002:timestamp"]
 
 
 @dataclass(frozen=True)
@@ -79,6 +81,10 @@ def load_yaml(path: Path) -> Any:
             return yaml.load(stream, Loader=ContractLoader)
     except (OSError, yaml.YAMLError) as exc:
         raise ValueError(f"cannot read YAML: {exc}") from exc
+
+
+def dump_yaml(path: Path, value: Any) -> None:
+    path.write_text(yaml.safe_dump(value, allow_unicode=True, sort_keys=False), encoding="utf-8")
 
 
 def load_schema(name: str) -> dict[str, Any]:
@@ -108,23 +114,43 @@ def artifact_header_matches(index_item: dict[str, Any], artifact: dict[str, Any]
     return findings
 
 
-def required_gate_findings(state: str, artifacts: list[dict[str, Any]]) -> list[Finding]:
-    requirement = GATES.get(state)
-    if not requirement:
-        return []
-    artifact_type, required_status = requirement
-    matches = [artifact for artifact in artifacts if artifact.get("type") == artifact_type]
-    if not matches:
-        return [Finding("missing_gate_artifact", f"state {state} requires a {artifact_type} artifact")]
-    if required_status and not any(artifact.get("status") == required_status for artifact in matches):
-        return [Finding("unconfirmed_gate", f"state {state} requires a {required_status} {artifact_type}")]
+def _matches(artifacts: list[dict[str, Any]], artifact_type: str, status: str | None) -> list[dict[str, Any]]:
+    return [artifact for artifact in artifacts if artifact.get("type") == artifact_type and (status is None or artifact.get("status") == status)]
+
+
+def _legacy_timeline_pending(project: dict[str, Any]) -> bool:
+    migration = project.get("migration")
+    return isinstance(migration, dict) and migration.get("migration_status") == "needs_timeline_baseline"
+
+
+def required_gate_findings(project: dict[str, Any], artifacts: list[dict[str, Any]]) -> list[Finding]:
+    state = project.get("current_state", "")
+    schema_version = project.get("schema_version")
+    gates = V02_GATES if schema_version == "0.2" else V01_GATES
+    requirements = gates.get(state, ())
+    findings: list[Finding] = []
+    for artifact_type, required_status in requirements:
+        if artifact_type == "timeline_baseline" and _legacy_timeline_pending(project):
+            continue
+        matches = _matches(artifacts, artifact_type, required_status)
+        if not matches and required_status and _matches(artifacts, artifact_type, None):
+            findings.append(Finding("unconfirmed_gate", f"state {state} requires a {required_status} {artifact_type}"))
+        elif not matches:
+            status_text = f" {required_status}" if required_status else ""
+            findings.append(Finding("missing_gate_artifact", f"state {state} requires a{status_text} {artifact_type} artifact"))
     if state == "board_decided":
-        decisions = [artifact.get("decision") for artifact in matches if artifact.get("status") == "confirmed"]
+        decisions = [artifact.get("decision") for artifact in _matches(artifacts, "board_decision", "confirmed")]
         if not any(decision in {"GO", "CONDITIONAL_GO"} for decision in decisions):
-            return [Finding("board_not_approved", "design is blocked until a confirmed GO or CONDITIONAL_GO decision")]
-    if state == "manuscript_audited" and not any(a.get("type") == "originality_report" for a in artifacts):
-        return [Finding("missing_gate_artifact", "manuscript_audited also requires an originality_report")]
-    return []
+            findings.append(Finding("board_not_approved", "design is blocked until a confirmed GO or CONDITIONAL_GO decision"))
+    if state == "submission_ready":
+        reports = _matches(artifacts, "deadline_readiness_report", "verified")
+        if reports and not any(
+            report.get("timeline", {}).get("ready_for_submission") is True
+            and report.get("verification_status") == "human_verified"
+            for report in reports
+        ):
+            findings.append(Finding("deadline_not_ready", "submission_ready requires a human-verified readiness report with ready_for_submission: true"))
+    return findings
 
 
 def state_history_findings(project: dict[str, Any]) -> list[Finding]:
@@ -190,45 +216,70 @@ def check_metrics(artifact: dict[str, Any], artifact_path: str) -> list[Finding]
     name = metric.get("name")
     if name == "Growth Momentum" and rating != "insufficient_evidence":
         windows = metric.get("windows")
-        if not isinstance(windows, list) or len(windows) != 2 or any(
-            not isinstance(window, dict)
-            or window.get("months") != 24
-            or not isinstance(window.get("independent_record_count"), int)
-            or window["independent_record_count"] < 5
-            for window in windows
-        ):
+        if not isinstance(windows, list) or len(windows) != 2 or any(not isinstance(window, dict) or window.get("months") != 24 or not isinstance(window.get("independent_record_count"), int) or window["independent_record_count"] < 5 for window in windows):
             return [Finding("growth_momentum_windows", "Growth Momentum needs two adjacent 24-month windows with at least five dated independent records each", artifact_path)]
     if name == "Semantic Repetition Rate" and rating != "insufficient_evidence":
         if not isinstance(metric.get("independent_record_count"), int) or metric["independent_record_count"] < 20:
             return [Finding("srr_minimum_records", "SRR needs at least 20 independent records before calculation", artifact_path)]
     if name == "Citation Coverage":
-        needed = metric.get("citation_needed_claims")
-        fully_supported = metric.get("fully_supported_claims")
+        needed, fully_supported = metric.get("citation_needed_claims"), metric.get("fully_supported_claims")
         if not isinstance(needed, int) or not isinstance(fully_supported, int) or needed < 0 or fully_supported < 0 or fully_supported > needed:
             return [Finding("citation_coverage_counts", "Citation Coverage requires non-negative supported and needed claim counts", artifact_path)]
     return []
 
 
 def downstream_artifact_ids(artifacts: list[dict[str, Any]], root_id: str) -> set[str]:
-    """Return direct and transitive dependants of an overridden artifact."""
     dependants: dict[str, set[str]] = {}
     for artifact in artifacts:
         for dependency in artifact.get("depends_on", []):
             dependants.setdefault(dependency, set()).add(artifact.get("id", ""))
-    pending = list(dependants.get(root_id, set()))
-    result: set[str] = set()
+    pending, result = list(dependants.get(root_id, set())), set()
     while pending:
         current = pending.pop()
-        if current in result:
-            continue
-        result.add(current)
-        pending.extend(dependants.get(current, set()))
+        if current not in result:
+            result.add(current)
+            pending.extend(dependants.get(current, set()))
     return result
 
 
+def check_confirmation(artifact: dict[str, Any], artifact_path: str) -> list[Finding]:
+    if artifact.get("type") not in CONFIRMATION_TYPES or artifact.get("status") != "confirmed":
+        return []
+    confirmation = artifact.get("confirmation")
+    if not isinstance(confirmation, dict) or confirmation.get("confirmed_by") != "user" or not confirmation.get("confirmed_at"):
+        return [Finding("missing_user_confirmation", "confirmed artifact requires a direct user confirmation record", artifact_path)]
+    return []
+
+
+def check_timeline_artifact(artifact: dict[str, Any], artifact_path: str, known: dict[str, dict[str, Any]]) -> list[Finding]:
+    artifact_type = artifact.get("type")
+    if artifact_type not in {"timeline_baseline", "execution_timeline", "progress_checkin", "timeline_rebaseline", "deadline_readiness_report"}:
+        return []
+    timeline = artifact.get("timeline")
+    if not isinstance(timeline, dict):
+        return [Finding("timeline_missing", f"{artifact_type} requires a timeline object", artifact_path)]
+    findings: list[Finding] = []
+    if artifact_type == "timeline_baseline":
+        if not timeline.get("final_submission_date") or not timeline.get("hard_deadlines") or not timeline.get("weekly_capacity_hours"):
+            findings.append(Finding("timeline_baseline_incomplete", "timeline_baseline needs final submission, hard deadlines, and weekly capacity", artifact_path))
+        elif not any(deadline.get("kind") == "final_submission" for deadline in timeline.get("hard_deadlines", []) if isinstance(deadline, dict)):
+            findings.append(Finding("timeline_final_deadline", "timeline_baseline hard deadlines must include final_submission", artifact_path))
+    if artifact_type == "execution_timeline" and not timeline.get("milestones"):
+        findings.append(Finding("execution_timeline_incomplete", "execution_timeline requires milestones", artifact_path))
+    if artifact_type == "progress_checkin" and not timeline.get("checkin_at"):
+        findings.append(Finding("progress_checkin_incomplete", "progress_checkin requires timeline.checkin_at", artifact_path))
+    if artifact_type == "timeline_rebaseline":
+        predecessor = artifact.get("supersedes")
+        previous = known.get(predecessor) if isinstance(predecessor, str) else None
+        if not previous or previous.get("type") not in TIMELINE_TYPES:
+            findings.append(Finding("invalid_rebaseline", "timeline_rebaseline must supersede a timeline baseline or execution timeline", artifact_path))
+    if artifact_type == "deadline_readiness_report" and artifact.get("status") == "verified" and timeline.get("ready_for_submission") is not True:
+        findings.append(Finding("deadline_not_ready", "a verified deadline readiness report must explicitly set ready_for_submission: true", artifact_path))
+    return findings
+
+
 def validate_project(project_root: Path) -> list[Finding]:
-    research_root = project_root / RESEARCH_DIR
-    project_path = research_root / "project.yaml"
+    research_root, project_path = project_root / RESEARCH_DIR, project_root / RESEARCH_DIR / "project.yaml"
     if not project_path.is_file():
         return [Finding("missing_project", "missing .research/project.yaml", str(project_path))]
     try:
@@ -272,45 +323,89 @@ def validate_project(project_root: Path) -> list[Finding]:
         findings.extend(artifact_header_matches(index_item, artifact))
         findings.extend(check_raw_data_safety(artifact, str(artifact_file)))
         findings.extend(check_metrics(artifact, str(artifact_file)))
+        findings.extend(check_confirmation(artifact, str(artifact_file)))
         artifacts.append(artifact)
-    known_ids = {artifact.get("id") for artifact in artifacts}
+    known = {artifact.get("id"): artifact for artifact in artifacts}
     for artifact in artifacts:
         for dependency in artifact.get("depends_on", []):
-            if dependency not in known_ids:
+            if dependency not in known:
                 findings.append(Finding("unknown_dependency", f"artifact depends_on unknown id {dependency!r}", artifact.get("id", "")))
         supersedes = artifact.get("supersedes")
-        if supersedes is not None and supersedes not in known_ids:
+        if supersedes is not None and supersedes not in known:
             findings.append(Finding("unknown_supersedes", f"artifact supersedes unknown id {supersedes!r}", artifact.get("id", "")))
-        if artifact.get("type") in {"source", "evidence", "claim"} and artifact.get("manuscript_eligibility") == "claim_eligible":
-            if artifact.get("verification_status") != "human_verified":
-                findings.append(Finding("unverified_claim_evidence", "claim-eligible source/evidence/claim requires human_verified status", artifact.get("id", "")))
+        findings.extend(check_timeline_artifact(artifact, artifact.get("id", ""), known))
+        if artifact.get("type") in {"source", "evidence", "claim"} and artifact.get("manuscript_eligibility") == "claim_eligible" and artifact.get("verification_status") != "human_verified":
+            findings.append(Finding("unverified_claim_evidence", "claim-eligible source/evidence/claim requires human_verified status", artifact.get("id", "")))
         if artifact.get("provenance") == "project_generated" and artifact.get("manuscript_eligibility") == "claim_eligible":
             findings.append(Finding("self_verified_generation", "project-generated artifacts cannot make themselves claim-eligible", artifact.get("id", "")))
+    timeline_meta = project.get("timeline", {})
+    if project.get("schema_version") == "0.2" and isinstance(timeline_meta, dict):
+        active_id = timeline_meta.get("active_timeline_artifact_id")
+        if active_id is not None and (active_id not in known or known[active_id].get("type") not in TIMELINE_TYPES):
+            findings.append(Finding("invalid_active_timeline", "active_timeline_artifact_id must reference an indexed timeline artifact"))
+        if timeline_meta.get("contract_status") == "execution_active" and not _matches(artifacts, "execution_timeline", "confirmed") and not _matches(artifacts, "timeline_rebaseline", "confirmed"):
+            findings.append(Finding("missing_execution_timeline", "execution_active requires a confirmed execution timeline or confirmed rebaseline"))
     for override in project.get("user_overrides", []):
-        if isinstance(override, dict) and override.get("target_artifact_id") not in known_ids:
+        if isinstance(override, dict) and override.get("target_artifact_id") not in known:
             findings.append(Finding("override_target", "user override must target an indexed artifact", override.get("id", "")))
         elif isinstance(override, dict):
-            by_id = {artifact.get("id"): artifact for artifact in artifacts}
             for downstream_id in downstream_artifact_ids(artifacts, override["target_artifact_id"]):
-                if by_id[downstream_id].get("status") != "advisory_only":
+                if known[downstream_id].get("status") != "advisory_only":
                     findings.append(Finding("override_not_propagated", "artifacts downstream of a user override must be advisory_only", downstream_id))
-    findings.extend(required_gate_findings(project.get("current_state", ""), artifacts))
+    findings.extend(required_gate_findings(project, artifacts))
     return findings
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Validate a Research Skill Pack project without reading raw data.")
-    subparsers = parser.add_subparsers(dest="command", required=True)
-    validate_parser = subparsers.add_parser("validate", help="validate <project-root>")
-    validate_parser.add_argument("project_root", type=Path)
-    validate_parser.add_argument("--json", action="store_true", help="emit machine-readable findings")
-    transition_parser = subparsers.add_parser("transition", help="validate a state transition")
-    transition_parser.add_argument("current")
-    transition_parser.add_argument("target")
-    transition_parser.add_argument("--json", action="store_true", help="emit machine-readable findings")
-    args = parser.parse_args(argv)
-    findings = validate_project(args.project_root) if args.command == "validate" else transition_findings(args.current, args.target)
-    if args.json:
+def validate_portfolio(portfolio_path: Path) -> list[Finding]:
+    try:
+        portfolio = load_yaml(portfolio_path)
+    except ValueError as exc:
+        return [Finding("invalid_yaml", str(exc), str(portfolio_path))]
+    findings = schema_findings(portfolio, "portfolio-schema.json", str(portfolio_path))
+    if not isinstance(portfolio, dict):
+        return findings + [Finding("portfolio_type", "portfolio must be a mapping", str(portfolio_path))]
+    project_ids = [entry.get("project_id") for entry in portfolio.get("projects", []) if isinstance(entry, dict)]
+    if len(project_ids) != len(set(project_ids)):
+        findings.append(Finding("duplicate_portfolio_project", "portfolio project_id values must be unique", str(portfolio_path)))
+    return findings
+
+
+def migrate_v01_project(source_root: Path, output_root: Path, migrated_at: str | None = None) -> list[Finding]:
+    """Create a metadata-only v0.2 copy; source remains untouched."""
+    findings = validate_project(source_root)
+    if findings:
+        return [Finding("migration_source_invalid", "source project must validate before migration")] + findings
+    source_project = load_yaml(source_root / RESEARCH_DIR / "project.yaml")
+    if source_project.get("schema_version") != "0.1":
+        return [Finding("migration_source_version", "only a v0.1 project can be migrated")]
+    if output_root.exists():
+        return [Finding("migration_output_exists", "migration output directory must not already exist", str(output_root))]
+    stamp = migrated_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    target_research = output_root / RESEARCH_DIR
+    target_artifacts = target_research / "artifacts"
+    target_artifacts.mkdir(parents=True)
+    migrated = copy.deepcopy(source_project)
+    prior_state = migrated["current_state"]
+    migrated["schema_version"] = "0.2"
+    migrated["timeline"] = {"contract_status": "needs_baseline", "last_checked_at": stamp, "active_timeline_artifact_id": None, "timeline_health": "unknown"}
+    migrated["migration"] = {"source_schema_version": "0.1", "migrated_at": stamp, "migration_status": "needs_timeline_baseline", "prior_current_state": prior_state}
+    migrated["write_sequence"] = migrated.get("write_sequence", 0) + 1
+    migrated["current_state"] = "blocked"
+    migrated["state_history"].append({"sequence": migrated["write_sequence"], "state": "blocked", "at": stamp, "changed_by": "migration", "reason": "v0.2 requires a confirmed Timeline Baseline before work can continue"})
+    dump_yaml(target_research / "project.yaml", migrated)
+    for index_item in source_project.get("artifact_index", []):
+        relative_path = index_item.get("path") if isinstance(index_item, dict) else None
+        if not isinstance(relative_path, str) or not is_safe_artifact_path(relative_path):
+            continue
+        source_file = source_root / RESEARCH_DIR / relative_path
+        target_file = target_research / relative_path
+        target_file.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_file, target_file)
+    return []
+
+
+def _print_findings(findings: list[Finding], as_json: bool) -> None:
+    if as_json:
         print(json.dumps({"valid": not findings, "findings": [item.as_dict() for item in findings]}, ensure_ascii=False, indent=2))
     elif findings:
         for finding in findings:
@@ -318,6 +413,36 @@ def main(argv: list[str] | None = None) -> int:
             print(f"ERROR {finding.code}{detail}: {finding.message}")
     else:
         print("VALID")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Validate Research Skill Pack metadata without reading raw data.")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    validate_parser = subparsers.add_parser("validate", help="validate <project-root>")
+    validate_parser.add_argument("project_root", type=Path)
+    validate_parser.add_argument("--json", action="store_true")
+    transition_parser = subparsers.add_parser("transition", help="validate a state transition")
+    transition_parser.add_argument("current")
+    transition_parser.add_argument("target")
+    transition_parser.add_argument("--json", action="store_true")
+    portfolio_parser = subparsers.add_parser("validate-portfolio", help="validate a metadata-only portfolio registry")
+    portfolio_parser.add_argument("portfolio_path", type=Path)
+    portfolio_parser.add_argument("--json", action="store_true")
+    migration_parser = subparsers.add_parser("migrate", help="copy a v0.1 project metadata contract to a new v0.2 directory")
+    migration_parser.add_argument("source_root", type=Path)
+    migration_parser.add_argument("--output", type=Path, required=True)
+    migration_parser.add_argument("--at", dest="migrated_at")
+    migration_parser.add_argument("--json", action="store_true")
+    args = parser.parse_args(argv)
+    if args.command == "validate":
+        findings = validate_project(args.project_root)
+    elif args.command == "transition":
+        findings = transition_findings(args.current, args.target)
+    elif args.command == "validate-portfolio":
+        findings = validate_portfolio(args.portfolio_path)
+    else:
+        findings = migrate_v01_project(args.source_root, args.output, args.migrated_at)
+    _print_findings(findings, args.json)
     return 0 if not findings else 1
 
 

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Conclusion Writer"
+  short_description: "从已成立主张起草结论"
+  default_prompt: "Use $conclusion-writer to close my evidence-linked manuscript."
+policy:
+  allow_implicit_invocation: false

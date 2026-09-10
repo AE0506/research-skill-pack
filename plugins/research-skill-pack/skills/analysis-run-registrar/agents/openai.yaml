@@ -1,0 +1,7 @@
+interface:
+  display_name: "分析运行登记"
+  short_description: "登记用户实际执行的代码/软件、输入版本、参数、环境、输出与失败。"
+  default_prompt: "Use $analysis-run-registrar for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

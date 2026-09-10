@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研下一步导航"
+  short_description: "说明当前阶段、阻塞项与下一项行动"
+  default_prompt: "Use $next-action-navigator to tell me where my research project is and what to do next."
+policy:
+  allow_implicit_invocation: false

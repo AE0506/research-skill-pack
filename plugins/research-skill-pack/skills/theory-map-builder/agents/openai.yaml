@@ -1,0 +1,7 @@
+interface:
+  display_name: "理论地图构建"
+  short_description: "组织已核验文献中的理论、构念与理论关系，标出适用条件。"
+  default_prompt: "Use $theory-map-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

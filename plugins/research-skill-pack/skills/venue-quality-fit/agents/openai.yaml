@@ -1,0 +1,6 @@
+interface:
+  display_name: "Venue Quality Fit"
+  short_description: "评估论文与期刊质量匹配"
+  default_prompt: "Use $venue-quality-fit for my verified manuscript."
+policy:
+  allow_implicit_invocation: false

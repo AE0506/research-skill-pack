@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研时间线采集"
+  short_description: "采集截止、节点、容量与不可用时间"
+  default_prompt: "Use $timeline-intake to record my research deadlines and availability."
+policy:
+  allow_implicit_invocation: false

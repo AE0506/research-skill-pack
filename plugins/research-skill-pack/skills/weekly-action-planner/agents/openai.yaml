@@ -1,0 +1,6 @@
+interface:
+  display_name: "科研周行动计划"
+  short_description: "按真实容量生成本周优先任务"
+  default_prompt: "Use $weekly-action-planner to plan my research work this week."
+policy:
+  allow_implicit_invocation: false

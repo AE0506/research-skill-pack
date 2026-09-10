@@ -1,0 +1,6 @@
+interface:
+  display_name: "Primary Source Checker"
+  short_description: "检查是否遗漏原始来源"
+  default_prompt: "Use $primary-source-checker on my citations."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "执行风险审稿"
+  short_description: "审查时间、工作量、依赖、导师反馈和实施风险。"
+  default_prompt: "Use $execution-risk-reviewer for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

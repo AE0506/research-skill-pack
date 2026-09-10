@@ -1,0 +1,6 @@
+interface:
+  display_name: "研究趋势图谱"
+  short_description: "从本地日期资料映射研究变化"
+  default_prompt: "Use $research-trend-mapper to map trends in my local research sources."
+policy:
+  allow_implicit_invocation: false

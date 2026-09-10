@@ -1,0 +1,6 @@
+interface:
+  display_name: "资源与伦理盘点"
+  short_description: "记录数据、样本、工具与伦理边界"
+  default_prompt: "Use $resource-ethics-inventory to record my research resources and ethics constraints."
+policy:
+  allow_implicit_invocation: false

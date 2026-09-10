@@ -1,0 +1,6 @@
+interface:
+  display_name: "Logical Gap Reporter"
+  short_description: "发现论文论证链缺口"
+  default_prompt: "Use $logical-gap-reporter to audit my manuscript blueprint."
+policy:
+  allow_implicit_invocation: false

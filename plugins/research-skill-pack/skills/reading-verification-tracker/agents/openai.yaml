@@ -1,0 +1,7 @@
+interface:
+  display_name: "阅读与核验跟踪"
+  short_description: "记录阅读进度、人工核验范围、待核验定位和拒绝原因。"
+  default_prompt: "Use $reading-verification-tracker for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

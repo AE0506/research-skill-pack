@@ -1,0 +1,7 @@
+interface:
+  display_name: "时间证据地图构建"
+  short_description: "按发表/研究时间追踪概念、方法和结论的变化。"
+  default_prompt: "Use $temporal-map-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

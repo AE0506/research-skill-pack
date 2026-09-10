@@ -1,0 +1,6 @@
+interface:
+  display_name: "项目甜蜜区判断"
+  short_description: "以五道闸门判断具体题目是否适合该学生"
+  default_prompt: "Use $project-sweet-spot-assessor to assess whether my topic is in my Project Sweet Spot."
+policy:
+  allow_implicit_invocation: false

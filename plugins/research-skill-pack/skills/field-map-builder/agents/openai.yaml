@@ -1,0 +1,6 @@
+interface:
+  display_name: "研究领域地图"
+  short_description: "从本地学术资料构建领域结构图"
+  default_prompt: "Use $field-map-builder to map my research field from local evidence."
+policy:
+  allow_implicit_invocation: false

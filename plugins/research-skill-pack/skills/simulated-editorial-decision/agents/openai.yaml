@@ -1,0 +1,6 @@
+interface:
+  display_name: "Simulated Editorial Decision"
+  short_description: "汇总模拟审稿结论"
+  default_prompt: "Use $simulated-editorial-decision after my review round."
+policy:
+  allow_implicit_invocation: false

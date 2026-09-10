@@ -1,0 +1,7 @@
+interface:
+  display_name: "假设构建"
+  short_description: "从理论模型和问题生成可检验假设或明确的非假设性研究目标。"
+  default_prompt: "Use $hypothesis-builder for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

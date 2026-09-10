@@ -1,0 +1,7 @@
+interface:
+  display_name: "原始数据登记"
+  short_description: "仅登记原始数据的路径、SHA-256、访问等级和真实性声明。"
+  default_prompt: "Use $raw-data-registrar for its traceable research workflow in my local project."
+policy:
+  allow_implicit_invocation: false
+

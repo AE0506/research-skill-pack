@@ -1,0 +1,6 @@
+interface:
+  display_name: "Domain Reviewer"
+  short_description: "模拟领域与贡献审稿"
+  default_prompt: "Use $domain-reviewer on my manuscript."
+policy:
+  allow_implicit_invocation: false
