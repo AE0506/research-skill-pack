@@ -28,4 +28,4 @@ jobs:
       - run: python -m pip install "PyYAML>=6.0" "jsonschema>=4.0" "pytest>=8.0"
       - run: python -m pytest -q
       - run: python scripts/validate_plugin.py
-      - run: python scripts/validate_plugin.py --catalog-report --verification-report
+      - run: python scripts/validate_plugin.py --catalog-report --verification-report --skill-depth-report
