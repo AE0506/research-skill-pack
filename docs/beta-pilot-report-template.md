@@ -1,6 +1,6 @@
 # v0.2 Beta 脱敏试跑报告模板
 
-> 初始状态：`not_started`。本模板不是实际试跑记录；只在按 [试跑协议](beta-pilot-protocol.md) 完成授权、脱敏和人工确认后填写。
+> 初始状态：`not_started`。本模板不是实际试跑记录；只在按 [试跑协议](beta-pilot-protocol.md) 完成授权、脱敏和人工确认后填写。机器可复核的 YAML 证据必须由 `scripts/pilot_audit.py` 生成；本页只作为其公开说明摘要。
 
 ## 基本信息
 

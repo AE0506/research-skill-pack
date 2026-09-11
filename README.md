@@ -608,7 +608,7 @@ codex plugin list
 
 当前公开的是 **v0.2.0 Beta**：它完成了细粒度 Skill Catalog、项目契约、时间线系统、版本化 artifact、合成 fixture 与本地校验测试，并将 12 步科研链路组织为可安装的本地插件包。它的发布目标是邀请少量用户在受限边界内试用，而不是生产级科研或投稿系统。
 
-它更像一套可以持续演化的“科研工作单元操作系统”，而不是一个一次性论文生成器。Beta 仅支持 `zh-undergrad-information-management-empirical`，由 schema 强制限制；收集到第二类真实需求后，才会设计带迁移方案的 Profile Registry，而不是提前放宽现有约束。
+它更像一套可以持续演化的“科研工作单元操作系统”，而不是一个一次性论文生成器。Beta 仅激活 `zh-undergrad-information-management-empirical`，由受校验的 [Profile Registry](plugins/research-skill-pack/shared/profile-registry-v0.2.json) 驱动；新增 Profile 必须同步更新 schema、迁移说明与测试，不能再修改孤立硬编码。
 
 ### 授权状态
 
@@ -621,36 +621,37 @@ docs/                           # Beta 验证状态、试跑协议与脱敏报�
 plugins/research-skill-pack/
 ├── .codex-plugin/plugin.json   # 插件清单
 ├── skills/                     # 总入口、宏观 Skill 与 170+ 细粒度工作单元
-├── shared/                     # 项目 schema、状态机、Skill Catalog、共享契约
-├── scripts/                    # 校验、迁移与本地检查工具
+├── shared/                     # 项目 schema、Profile Registry、Catalog、验证矩阵与共享契约
+├── scripts/                    # 校验、迁移、私有试跑审计与本地检查工具
 ├── fixtures/                   # 不可用于真实研究的合成测试项目
 └── tests/                      # 项目契约、闸门与禁止行为测试
 ```
 
 ## 验证与贡献
 
-本仓库包含针对 schema、artifact、状态闸门、迁移、时间线与安全边界的可执行测试。`validate_plugin.py` 还会校验插件清单、所有 Skill 的可发现元数据、175 条 Catalog 与目录的严格一致性、172 条兼容映射、31 条受限短工作流和两套合成 fixtures。合成 fixtures 仅用于验证本地契约，绝不能进入真实论文或作为研究数据。
+本仓库包含针对 schema、artifact、状态闸门、迁移、时间线与安全边界的可执行测试。`validate_plugin.py` 还会校验插件清单、所有 Skill 的可发现元数据、175 条 Catalog 与目录的严格一致性、172 条兼容映射、Profile Registry、31 条受限短工作流和两套合成 fixtures。`verification-matrix-v0.2.yaml` 为 175 条验收 ID 提供唯一验证路径，但明确区分结构、确定性契约与人工试跑，不把它们混为模型行为测试。合成 fixtures 仅用于验证本地契约，绝不能进入真实论文或作为研究数据。
 
 ```bash
 cd plugins/research-skill-pack
 python3 -m pytest -q
 python3 scripts/validate_plugin.py
 python3 scripts/validate_plugin.py --catalog-report
+python3 scripts/validate_plugin.py --verification-report
 ```
 
 ### 已验证
 
-插件本地发现/启用、结构校验、项目契约测试，以及 Catalog/目录/兼容映射的一致性；这些检查均为本地、非联网、非模型调用验证。
+插件本地发现/启用、结构校验、项目契约测试，以及 Catalog/目录/兼容映射、Profile Registry 和逐项验证路径的一致性；这些检查均为本地、非联网、非模型调用验证。每种验证实际能证明什么，见 [验证模型](docs/verification-model.md)。
 
 ### 尚未验证
 
-一次已获授权的匿名真实试跑、真实对话的模型输出质量、外部来源真实性与投稿流程尚未验证。Catalog 的 `validation` 字段明确区分结构检查、行为测试和需要人工试跑的路径，不应被解读为逐项功能测试完成。
+一次已获授权的匿名真实试跑、真实对话的模型输出质量、外部来源真实性与投稿流程尚未验证。175 条验收 ID 已有一对一验证映射，但其中结构检查与确定性契约测试并不等同于逐项模型功能测试。
 
 ### 不会做
 
 不联网核验来源、不默认读取原始敏感数据、不登录或提交外部系统、不伪造证据或结果、不提供规避学术检测的能力。
 
-试跑必须在仓库外的独立本地目录进行，并按 [匿名真实试跑协议](docs/beta-pilot-protocol.md) 与 [脱敏报告模板](docs/beta-pilot-report-template.md) 留下可公开的最小证据。完整边界见 [Beta 验证状态](docs/validation-status.md)。
+试跑必须在仓库外的独立本地目录进行，并按 [匿名真实试跑协议](docs/beta-pilot-protocol.md)、[声明模板](docs/beta-pilot-attestation-template.yaml) 与 [脱敏报告模板](docs/beta-pilot-report-template.md) 留下可公开的最小证据。真实试跑与 `v0.2.0` GitHub pre-release 在其完成前保持 `blocked`。完整边界见 [Beta 验证状态](docs/validation-status.md)。
 
 欢迎通过 Issue 讨论新的学科 profile、研究工作单元与文档改进；任何贡献都不能削弱真实数据、来源核验、用户确认与作者责任这四条底线。
 

@@ -31,3 +31,17 @@
 - 最终报告使用 [脱敏试跑报告模板](beta-pilot-report-template.md)，明确写为“一次受限流程验证”。
 
 未满足以上条件时，报告状态只能是 `not_started`、`in_progress` 或 `blocked`，不得称为“真实试跑完成”。
+
+## 生成脱敏审计报告
+
+试跑目录与声明文件必须在仓库外。复制 [声明模板](beta-pilot-attestation-template.yaml) 后，只填写其中允许的状态、artifact ID、时间戳和命令退出码；不要新增自由文本字段。
+
+```bash
+cd plugins/research-skill-pack
+python3 scripts/research_contract.py validate /absolute/path/to/private-pilot
+python3 scripts/pilot_audit.py /absolute/path/to/private-pilot \
+  --attestation /absolute/path/to/private-pilot-attestation.yaml \
+  --report /absolute/path/to/redacted-pilot-report.yaml --json
+```
+
+审计器不读取登记的原始数据路径，也不会把项目标题、人员信息、研究文本或命令参数写入报告。任一授权、脱敏、人工确认、关键 artifact 或项目契约不满足时，它仍会生成 `blocked` 报告并以非零状态退出。
