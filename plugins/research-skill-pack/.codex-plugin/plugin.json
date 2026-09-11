@@ -9,7 +9,7 @@
   "interface": {
     "displayName": "Research Skill Pack",
     "shortDescription": "Evidence-first research workflow skills",
-    "longDescription": "Guide a local research project through more than 170 explicit, evidence-first research work units, including a cross-project Timeline and Milestone OS. It never fabricates evidence, handles raw sensitive data by default, or submits work externally.",
+    "longDescription": "Guide a local research project through more than 170 explicit, evidence-first research work units, including a cross-project Timeline and Milestone OS. Licensed under MIT; it never fabricates evidence, handles raw sensitive data by default, or submits work externally.",
     "developerName": "Zhang Zheng",
     "category": "Productivity",
     "capabilities": [],

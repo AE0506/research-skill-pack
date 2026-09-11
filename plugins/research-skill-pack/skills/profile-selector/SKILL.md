@@ -5,7 +5,7 @@ description: Select and record the research profile that governs a local project
 
 # Profile Selector｜研究 Profile 选择
 
-Turn the user's task type, discipline, degree level, and institution requirements into an explicit profile-selection record. The v0.2 default is `zh-undergrad-information-management-empirical`; do not silently apply it when the user's case differs.
+Turn the user's task type, discipline, degree level, and institution requirements into an explicit profile-selection record. Read the supported IDs from [Profile Registry](../../shared/profile-registry-v0.2.json); v0.2 currently activates `zh-undergrad-information-management-empirical`, and it must not be silently applied when the user's case differs.
 
 ## Workflow
 

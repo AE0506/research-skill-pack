@@ -1,0 +1,1386 @@
+matrix_version: 0.2.0-beta
+purpose: Maps every Catalog acceptance ID to exactly one verification record without treating structural checks as model behavior
+  tests.
+kinds:
+  structural: Automated metadata and Skill-package checks only.
+  deterministic_contract: Automated local project-contract behavior checks only.
+  manual_pilot: A human-confirmed deidentified real-project pilot step.
+cases:
+- verification_id: PILOT-001-research-orchestrator
+  acceptance_id: CAT-001
+  skill_id: research-orchestrator
+  kind: manual_pilot
+  pilot_step: orchestrator_route
+  evidence_boundary: A human-confirmed, deidentified pilot record; not a model-quality or research-result guarantee.
+- verification_id: PILOT-001-research-radar
+  acceptance_id: CAT-002
+  skill_id: research-radar
+  kind: manual_pilot
+  pilot_step: context_brief
+  evidence_boundary: A human-confirmed, deidentified pilot record; not a model-quality or research-result guarantee.
+- verification_id: STR-SKILL-research-project-initializer
+  acceptance_id: GOV-001
+  skill_id: research-project-initializer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-profile-selector
+  acceptance_id: GOV-002
+  skill_id: profile-selector
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-thesis-requirement-intake
+  acceptance_id: GOV-003
+  skill_id: thesis-requirement-intake
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-institution-rule-interpreter
+  acceptance_id: GOV-004
+  skill_id: institution-rule-interpreter
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-supervisor-constraint-capture
+  acceptance_id: GOV-005
+  skill_id: supervisor-constraint-capture
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-researcher-capability-inventory
+  acceptance_id: GOV-006
+  skill_id: researcher-capability-inventory
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-resource-ethics-inventory
+  acceptance_id: GOV-007
+  skill_id: resource-ethics-inventory
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-freeform-context-compiler
+  acceptance_id: GOV-008
+  skill_id: freeform-context-compiler
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-constraint-normalizer
+  acceptance_id: GOV-009
+  skill_id: research-constraint-normalizer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-context-brief-generator
+  acceptance_id: GOV-010
+  skill_id: context-brief-generator
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: CONTRACT-context-confirmation-gate
+  acceptance_id: GOV-011
+  skill_id: context-confirmation-gate
+  kind: deterministic_contract
+  test_file: tests/test_research_contract.py
+  test_case: test_confirmed_intake_requires_confirmed_context_brief
+  evidence_boundary: Deterministic local metadata-contract behavior only; it does not evaluate an LLM response.
+- verification_id: PILOT-001-timeline-intake
+  acceptance_id: TIM-001
+  skill_id: timeline-intake
+  kind: manual_pilot
+  pilot_step: timeline_constraints
+  evidence_boundary: A human-confirmed, deidentified pilot record; not a model-quality or research-result guarantee.
+- verification_id: STR-SKILL-deadline-ladder-builder
+  acceptance_id: TIM-002
+  skill_id: deadline-ladder-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-capacity-assessor
+  acceptance_id: TIM-003
+  skill_id: research-capacity-assessor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: PILOT-001-timeline-baseline-builder
+  acceptance_id: TIM-004
+  skill_id: timeline-baseline-builder
+  kind: manual_pilot
+  pilot_step: timeline_baseline
+  evidence_boundary: A human-confirmed, deidentified pilot record; not a model-quality or research-result guarantee.
+- verification_id: STR-SKILL-milestone-plan-builder
+  acceptance_id: TIM-005
+  skill_id: milestone-plan-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-dependency-critical-path-analyzer
+  acceptance_id: TIM-006
+  skill_id: dependency-critical-path-analyzer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-weekly-action-planner
+  acceptance_id: TIM-007
+  skill_id: weekly-action-planner
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-next-action-navigator
+  acceptance_id: TIM-008
+  skill_id: next-action-navigator
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: CONTRACT-timeline-drift-monitor
+  acceptance_id: TIM-009
+  skill_id: timeline-drift-monitor
+  kind: deterministic_contract
+  test_file: tests/test_research_contract.py
+  test_case: test_progress_checkin_requires_an_actual_checkin_timestamp
+  evidence_boundary: Deterministic local metadata-contract behavior only; it does not evaluate an LLM response.
+- verification_id: CONTRACT-rebaseline-planner
+  acceptance_id: TIM-010
+  skill_id: rebaseline-planner
+  kind: deterministic_contract
+  test_file: tests/test_research_contract.py
+  test_case: test_rebaseline_must_supersede_an_earlier_timeline
+  evidence_boundary: Deterministic local metadata-contract behavior only; it does not evaluate an LLM response.
+- verification_id: CONTRACT-deadline-readiness-gate
+  acceptance_id: TIM-011
+  skill_id: deadline-readiness-gate
+  kind: deterministic_contract
+  test_file: tests/test_research_contract.py
+  test_case: test_submission_gate_requires_human_checked_ready_report
+  evidence_boundary: Deterministic local metadata-contract behavior only; it does not evaluate an LLM response.
+- verification_id: STR-SKILL-source-authority-router
+  acceptance_id: TOP-001
+  skill_id: source-authority-router
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-academic-evidence-lane
+  acceptance_id: TOP-002
+  skill_id: academic-evidence-lane
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-local-source-classifier
+  acceptance_id: TOP-003
+  skill_id: local-source-classifier
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-field-map-builder
+  acceptance_id: TOP-004
+  skill_id: field-map-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-lifecycle-assessor
+  acceptance_id: TOP-005
+  skill_id: research-lifecycle-assessor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-trend-mapper
+  acceptance_id: TOP-006
+  skill_id: research-trend-mapper
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: CONTRACT-growth-momentum-assessor
+  acceptance_id: TOP-007
+  skill_id: growth-momentum-assessor
+  kind: deterministic_contract
+  test_file: tests/test_research_contract.py
+  test_case: test_growth_momentum_requires_two_qualified_windows
+  evidence_boundary: Deterministic local metadata-contract behavior only; it does not evaluate an LLM response.
+- verification_id: STR-SKILL-field-opportunity-discovery
+  acceptance_id: TOP-008
+  skill_id: field-opportunity-discovery
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-topic-candidate-generator
+  acceptance_id: TOP-009
+  skill_id: topic-candidate-generator
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-topic-fingerprint-builder
+  acceptance_id: TOP-010
+  skill_id: topic-fingerprint-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-topic-comparability-analyzer
+  acceptance_id: TOP-011
+  skill_id: topic-comparability-analyzer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-field-sweet-spot-assessor
+  acceptance_id: TOP-012
+  skill_id: field-sweet-spot-assessor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-topic-feasibility-analyzer
+  acceptance_id: TOP-013
+  skill_id: topic-feasibility-analyzer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-topic-ranking-tradeoff-explainer
+  acceptance_id: TOP-014
+  skill_id: topic-ranking-tradeoff-explainer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-project-sweet-spot-assessor
+  acceptance_id: TOP-015
+  skill_id: project-sweet-spot-assessor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-topic-opportunity-report-builder
+  acceptance_id: TOP-016
+  skill_id: topic-opportunity-report-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-literature-os
+  acceptance_id: LIT-000
+  skill_id: research-literature-os
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-literature-importer
+  acceptance_id: LIT-001
+  skill_id: literature-importer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-paper-version-linker
+  acceptance_id: LIT-002
+  skill_id: paper-version-linker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-literature-screening
+  acceptance_id: LIT-003
+  skill_id: literature-screening
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-literature-structure-extractor
+  acceptance_id: LIT-004
+  skill_id: literature-structure-extractor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-claim-evidence-extractor
+  acceptance_id: LIT-005
+  skill_id: claim-evidence-extractor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-evidence-graph-builder
+  acceptance_id: LIT-006
+  skill_id: evidence-graph-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-theory-map-builder
+  acceptance_id: LIT-007
+  skill_id: theory-map-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-method-map-builder
+  acceptance_id: LIT-008
+  skill_id: method-map-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-conflict-map-builder
+  acceptance_id: LIT-009
+  skill_id: conflict-map-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-temporal-map-builder
+  acceptance_id: LIT-010
+  skill_id: temporal-map-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-reading-verification-tracker
+  acceptance_id: LIT-011
+  skill_id: reading-verification-tracker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-retraction-impact-analyzer
+  acceptance_id: LIT-019
+  skill_id: retraction-impact-analyzer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-literature-lifecycle-monitor
+  acceptance_id: LIT-012
+  skill_id: literature-lifecycle-monitor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-citation-usage-tracker
+  acceptance_id: LIT-013
+  skill_id: citation-usage-tracker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-literature-saturation-assessor
+  acceptance_id: LIT-014
+  skill_id: literature-saturation-assessor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-contradiction-manager
+  acceptance_id: LIT-015
+  skill_id: contradiction-manager
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-lineage-mapper
+  acceptance_id: LIT-016
+  skill_id: research-lineage-mapper
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-literature-priority-classifier
+  acceptance_id: LIT-017
+  skill_id: literature-priority-classifier
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: PILOT-001-research-gap-finder
+  acceptance_id: GAP-000
+  skill_id: research-gap-finder
+  kind: manual_pilot
+  pilot_step: gap_card
+  evidence_boundary: A human-confirmed, deidentified pilot record; not a model-quality or research-result guarantee.
+- verification_id: STR-SKILL-literature-matrix-builder
+  acceptance_id: GAP-001
+  skill_id: literature-matrix-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-question-fingerprinter
+  acceptance_id: GAP-002
+  skill_id: research-question-fingerprinter
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-counterevidence-locator
+  acceptance_id: GAP-003
+  skill_id: counterevidence-locator
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-gap-card-builder
+  acceptance_id: GAP-004
+  skill_id: gap-card-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-question-generator
+  acceptance_id: GAP-005
+  skill_id: research-question-generator
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-question-converger
+  acceptance_id: GAP-006
+  skill_id: research-question-converger
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-gap-evidence-sufficiency-checker
+  acceptance_id: GAP-007
+  skill_id: gap-evidence-sufficiency-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: PILOT-001-research-review-board
+  acceptance_id: BRD-000
+  skill_id: research-review-board
+  kind: manual_pilot
+  pilot_step: review_board
+  evidence_boundary: A human-confirmed, deidentified pilot record; not a model-quality or research-result guarantee.
+- verification_id: STR-SKILL-theory-reviewer
+  acceptance_id: BRD-001
+  skill_id: theory-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-construct-reviewer
+  acceptance_id: BRD-002
+  skill_id: construct-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-method-fit-reviewer
+  acceptance_id: BRD-003
+  skill_id: method-fit-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-data-feasibility-reviewer
+  acceptance_id: BRD-004
+  skill_id: data-feasibility-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-execution-risk-reviewer
+  acceptance_id: BRD-005
+  skill_id: execution-risk-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-capability-showcase-reviewer
+  acceptance_id: BRD-006
+  skill_id: capability-showcase-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-resilience-reviewer
+  acceptance_id: BRD-007
+  skill_id: resilience-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: PILOT-001-review-board-decision
+  acceptance_id: BRD-008
+  skill_id: review-board-decision
+  kind: manual_pilot
+  pilot_step: review_board_confirmation
+  evidence_boundary: A human-confirmed, deidentified pilot record; not a model-quality or research-result guarantee.
+- verification_id: CONTRACT-research-design
+  acceptance_id: DES-000
+  skill_id: research-design
+  kind: deterministic_contract
+  test_file: tests/test_research_contract.py
+  test_case: test_design_state_requires_protocol
+  evidence_boundary: Deterministic local metadata-contract behavior only; it does not evaluate an LLM response.
+- verification_id: STR-SKILL-research-paradigm-selector
+  acceptance_id: DES-001
+  skill_id: research-paradigm-selector
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-question-operationalizer
+  acceptance_id: DES-002
+  skill_id: research-question-operationalizer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-theoretical-model-builder
+  acceptance_id: DES-003
+  skill_id: theoretical-model-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-hypothesis-builder
+  acceptance_id: DES-004
+  skill_id: hypothesis-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-variable-dictionary-builder
+  acceptance_id: DES-005
+  skill_id: variable-dictionary-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-measurement-plan-builder
+  acceptance_id: DES-006
+  skill_id: measurement-plan-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-sampling-recruitment-planner
+  acceptance_id: DES-007
+  skill_id: sampling-recruitment-planner
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-control-variable-planner
+  acceptance_id: DES-008
+  skill_id: control-variable-planner
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-analysis-plan-builder
+  acceptance_id: DES-009
+  skill_id: analysis-plan-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-causal-boundary-checker
+  acceptance_id: DES-010
+  skill_id: causal-boundary-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-interpretation-boundary-checker
+  acceptance_id: DES-011
+  skill_id: interpretation-boundary-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-protocol-builder
+  acceptance_id: DES-012
+  skill_id: research-protocol-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-evidence-lab
+  acceptance_id: EVD-000
+  skill_id: research-evidence-lab
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: CONTRACT-raw-data-registrar
+  acceptance_id: EVD-001
+  skill_id: raw-data-registrar
+  kind: deterministic_contract
+  test_file: tests/test_research_contract.py
+  test_case: test_raw_data_register_rejects_embedded_records
+  evidence_boundary: Deterministic local metadata-contract behavior only; it does not evaluate an LLM response.
+- verification_id: STR-SKILL-data-dictionary-builder
+  acceptance_id: EVD-002
+  skill_id: data-dictionary-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-public-data-provider-router
+  acceptance_id: EVD-003
+  skill_id: public-data-provider-router
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-deidentified-summary-approval
+  acceptance_id: EVD-004
+  skill_id: deidentified-summary-approval
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-data-cleaning-planner
+  acceptance_id: EVD-005
+  skill_id: data-cleaning-planner
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-data-cleaning-versioner
+  acceptance_id: EVD-006
+  skill_id: data-cleaning-versioner
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-analysis-run-registrar
+  acceptance_id: EVD-007
+  skill_id: analysis-run-registrar
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-statistical-test-planner
+  acceptance_id: EVD-008
+  skill_id: statistical-test-planner
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-result-verifier
+  acceptance_id: EVD-009
+  skill_id: result-verifier
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-figure-register
+  acceptance_id: EVD-010
+  skill_id: figure-register
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-data-lineage-builder
+  acceptance_id: EVD-011
+  skill_id: data-lineage-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-verified-evidence-package-builder
+  acceptance_id: EVD-012
+  skill_id: verified-evidence-package-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-paper-architect
+  acceptance_id: MAN-000
+  skill_id: paper-architect
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-central-thesis-builder
+  acceptance_id: MAN-001
+  skill_id: central-thesis-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-argument-unit-designer
+  acceptance_id: MAN-002
+  skill_id: argument-unit-designer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-argument-tree-builder
+  acceptance_id: MAN-003
+  skill_id: argument-tree-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-claim-graph-builder
+  acceptance_id: MAN-004
+  skill_id: claim-graph-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-argument-coverage-checker
+  acceptance_id: MAN-005
+  skill_id: argument-coverage-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-chapter-mapper
+  acceptance_id: MAN-006
+  skill_id: chapter-mapper
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-paragraph-blueprint-builder
+  acceptance_id: MAN-007
+  skill_id: paragraph-blueprint-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-logical-gap-reporter
+  acceptance_id: MAN-008
+  skill_id: logical-gap-reporter
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-academic-writing
+  acceptance_id: WRT-000
+  skill_id: academic-writing
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-introduction-writer
+  acceptance_id: WRT-001
+  skill_id: introduction-writer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-literature-review-writer
+  acceptance_id: WRT-002
+  skill_id: literature-review-writer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-theory-hypothesis-writer
+  acceptance_id: WRT-003
+  skill_id: theory-hypothesis-writer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-method-writer
+  acceptance_id: WRT-004
+  skill_id: method-writer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-results-writer
+  acceptance_id: WRT-005
+  skill_id: results-writer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-discussion-writer
+  acceptance_id: WRT-006
+  skill_id: discussion-writer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-conclusion-writer
+  acceptance_id: WRT-007
+  skill_id: conclusion-writer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-sentence-role-annotator
+  acceptance_id: WRT-008
+  skill_id: sentence-role-annotator
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-terminology-consistency-checker
+  acceptance_id: WRT-009
+  skill_id: terminology-consistency-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-marginal-knowledge-gain-assessor
+  acceptance_id: WRT-010
+  skill_id: marginal-knowledge-gain-assessor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-causal-language-boundary-checker
+  acceptance_id: WRT-011
+  skill_id: causal-language-boundary-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-template-language-risk-auditor
+  acceptance_id: WRT-012
+  skill_id: template-language-risk-auditor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-manual-rewrite-queue-builder
+  acceptance_id: WRT-013
+  skill_id: manual-rewrite-queue-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-academic-originality
+  acceptance_id: ORG-000
+  skill_id: academic-originality
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-paper-identity-resolver
+  acceptance_id: ORG-001
+  skill_id: paper-identity-resolver
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-evidence-aging-assessor
+  acceptance_id: ORG-002
+  skill_id: evidence-aging-assessor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-paragraph-substance-analyzer
+  acceptance_id: ORG-003
+  skill_id: paragraph-substance-analyzer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-citation-evidence-guard
+  acceptance_id: CIT-000
+  skill_id: citation-evidence-guard
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-citation-necessity-detector
+  acceptance_id: CIT-001
+  skill_id: citation-necessity-detector
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-citation-existence-verifier
+  acceptance_id: CIT-002
+  skill_id: citation-existence-verifier
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-citation-entailment-auditor
+  acceptance_id: CIT-003
+  skill_id: citation-entailment-auditor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-citation-strength-assessor
+  acceptance_id: CIT-004
+  skill_id: citation-strength-assessor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-evidence-scope-mismatch-checker
+  acceptance_id: CIT-005
+  skill_id: evidence-scope-mismatch-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-primary-source-checker
+  acceptance_id: CIT-006
+  skill_id: primary-source-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-citation-age-logic-checker
+  acceptance_id: CIT-007
+  skill_id: citation-age-logic-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-citation-diversity-auditor
+  acceptance_id: CIT-008
+  skill_id: citation-diversity-auditor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: CONTRACT-citation-coverage-calculator
+  acceptance_id: CIT-009
+  skill_id: citation-coverage-calculator
+  kind: deterministic_contract
+  test_file: tests/test_research_contract.py
+  test_case: test_metric_requires_evidence_for_real_rating
+  evidence_boundary: Deterministic local metadata-contract behavior only; it does not evaluate an LLM response.
+- verification_id: STR-SKILL-citation-risk-heatmap
+  acceptance_id: CIT-010
+  skill_id: citation-risk-heatmap
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-cross-paragraph-contradiction-checker
+  acceptance_id: CIT-011
+  skill_id: cross-paragraph-contradiction-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-simulated-editorial-decision
+  acceptance_id: REV-010
+  skill_id: simulated-editorial-decision
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-reviewer-simulator
+  acceptance_id: REV-000
+  skill_id: reviewer-simulator
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-domain-reviewer
+  acceptance_id: REV-001
+  skill_id: domain-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-methodology-reviewer
+  acceptance_id: REV-002
+  skill_id: methodology-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-statistics-reviewer
+  acceptance_id: REV-003
+  skill_id: statistics-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-argument-reviewer
+  acceptance_id: REV-004
+  skill_id: argument-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-writing-reviewer
+  acceptance_id: REV-005
+  skill_id: writing-reviewer
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-attack-defend-planner
+  acceptance_id: REV-006
+  skill_id: attack-defend-planner
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-evidence-rebuttal-checker
+  acceptance_id: REV-007
+  skill_id: evidence-rebuttal-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-revision-dependency-builder
+  acceptance_id: REV-008
+  skill_id: revision-dependency-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-manuscript-stability-tracker
+  acceptance_id: REV-009
+  skill_id: manuscript-stability-tracker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-submission-strategy-planner
+  acceptance_id: VEN-009
+  skill_id: submission-strategy-planner
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-journal-venue-matcher
+  acceptance_id: VEN-000
+  skill_id: journal-venue-matcher
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-venue-scope-fit
+  acceptance_id: VEN-001
+  skill_id: venue-scope-fit
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-article-pattern-fit
+  acceptance_id: VEN-002
+  skill_id: article-pattern-fit
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-venue-quality-fit
+  acceptance_id: VEN-003
+  skill_id: venue-quality-fit
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-venue-ladder-builder
+  acceptance_id: VEN-004
+  skill_id: venue-ladder-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-submission-constraint-checker
+  acceptance_id: VEN-005
+  skill_id: submission-constraint-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-journal-integrity-risk-assessor
+  acceptance_id: VEN-006
+  skill_id: journal-integrity-risk-assessor
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-predatory-venue-guard
+  acceptance_id: VEN-007
+  skill_id: predatory-venue-guard
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-presubmission-checklist
+  acceptance_id: VEN-008
+  skill_id: presubmission-checklist
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-submission-revision-os
+  acceptance_id: SUB-000
+  skill_id: submission-revision-os
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-submission-package-builder
+  acceptance_id: SUB-001
+  skill_id: submission-package-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-cover-letter-drafter
+  acceptance_id: SUB-002
+  skill_id: cover-letter-drafter
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-highlights-builder
+  acceptance_id: SUB-003
+  skill_id: highlights-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-graphical-abstract-outline
+  acceptance_id: SUB-004
+  skill_id: graphical-abstract-outline
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-author-declaration-checker
+  acceptance_id: SUB-005
+  skill_id: author-declaration-checker
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-manuscript-version-manager
+  acceptance_id: SUB-006
+  skill_id: manuscript-version-manager
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-reviewer-comment-parser
+  acceptance_id: SUB-007
+  skill_id: reviewer-comment-parser
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-response-matrix-builder
+  acceptance_id: SUB-008
+  skill_id: response-matrix-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-response-to-reviewers-drafter
+  acceptance_id: SUB-009
+  skill_id: response-to-reviewers-drafter
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-review-dependency-builder
+  acceptance_id: SUB-010
+  skill_id: review-dependency-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-submission-compliance-gate
+  acceptance_id: SUB-011
+  skill_id: submission-compliance-gate
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.
+- verification_id: STR-SKILL-research-archive-builder
+  acceptance_id: SUB-012
+  skill_id: research-archive-builder
+  kind: structural
+  test_file: tests/test_research_contract.py
+  test_case: test_catalog_skill_structural_contract
+  evidence_boundary: Checks discoverability, declared inputs/outputs/gates/safety, and verification metadata; it does not
+    evaluate an LLM response.

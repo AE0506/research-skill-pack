@@ -1,4 +1,6 @@
-# 科研论文 Skill Pack 开发任务清单
+# [归档] 科研论文 Skill Pack 开发任务清单
+
+> 这是早期开发任务记录，不代表当前已交付能力或 v0.2 Beta 发布承诺。请以 [Beta 验证状态](../docs/validation-status.md) 为准。
 
 本清单以 [tasks/plan.md](plan.md) 为架构依据。当前仓库为空；本阶段仅计划，不把未确认的外部 API 或模型能力写成已实现功能。
 

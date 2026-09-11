@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import shutil
 import sys
+import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 
@@ -11,11 +13,21 @@ PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PLUGIN_ROOT / "scripts"))
 import research_contract as contract  # noqa: E402
 import validate_plugin  # noqa: E402
+import pilot_audit  # noqa: E402
 
 
 FIXTURE = PLUGIN_ROOT / "fixtures" / "valid-project"
 V02_FIXTURE = PLUGIN_ROOT / "fixtures" / "v0.2-project"
 PORTFOLIO_FIXTURE = PLUGIN_ROOT / "fixtures" / "portfolio.yaml"
+
+
+def catalog_records() -> list[dict]:
+    catalog = load_yaml(PLUGIN_ROOT / "shared/skill-catalog-v0.2.yaml")
+    return [skill for pack in catalog["packs"] for skill in pack["skills"]]
+
+
+def verification_cases() -> list[dict]:
+    return load_yaml(PLUGIN_ROOT / "shared/verification-matrix-v0.2.yaml")["cases"]
 
 
 def copied_project(tmp_path: Path) -> Path:
@@ -36,6 +48,11 @@ def load_yaml(path: Path) -> dict:
 
 def write_yaml(path: Path, content: dict) -> None:
     path.write_text(yaml.safe_dump(content, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+
+STRUCTURAL_SKILL_IDS = [
+    case["skill_id"] for case in verification_cases() if case["kind"] == "structural"
+]
 
 
 def finding_codes(project: Path) -> set[str]:
@@ -281,8 +298,181 @@ def test_plugin_package_structure_and_synthetic_fixtures_validate() -> None:
     assert validate_plugin.validate_plugin() == []
 
 
+def test_beta_profile_remains_explicitly_scoped() -> None:
+    schema = json.loads((PLUGIN_ROOT / "shared/project-schema.json").read_text(encoding="utf-8"))
+    registry = json.loads((PLUGIN_ROOT / "shared/profile-registry-v0.2.json").read_text(encoding="utf-8"))
+    profile_ids = [profile["id"] for profile in registry["profiles"]]
+    assert schema["properties"]["profile"]["enum"] == profile_ids
+    assert profile_ids == ["zh-undergrad-information-management-empirical"]
+
+
+@pytest.mark.parametrize("skill_id", STRUCTURAL_SKILL_IDS)
+def test_catalog_skill_structural_contract(skill_id: str) -> None:
+    skill = next(item for item in catalog_records() if item["id"] == skill_id)
+    metadata = validate_plugin._front_matter(PLUGIN_ROOT / "skills" / skill_id / "SKILL.md")
+    assert metadata is not None
+    assert metadata["name"] == skill_id
+    assert all(skill[key] for key in ("inputs", "outputs", "gates", "safety", "acceptance_ids"))
+    assert skill["validation"]["level"] == "structural"
+    assert skill["validation"]["refs"] == [f"STR-SKILL-{skill_id}"]
+
+
+def test_verification_matrix_covers_every_acceptance_id_once() -> None:
+    catalog_by_acceptance = {
+        acceptance_id: skill["id"]
+        for skill in catalog_records()
+        for acceptance_id in skill["acceptance_ids"]
+    }
+    matrix = verification_cases()
+    assert len(matrix) == 175
+    assert {case["acceptance_id"] for case in matrix} == set(catalog_by_acceptance)
+    assert len({case["verification_id"] for case in matrix}) == 175
+    assert all(case["skill_id"] == catalog_by_acceptance[case["acceptance_id"]] for case in matrix)
+
+
 def test_plugin_validator_rejects_missing_skill_front_matter(tmp_path: Path) -> None:
     plugin_root = tmp_path / "plugin"
     shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
     (plugin_root / "skills/research-radar/SKILL.md").write_text("# missing metadata\n", encoding="utf-8")
     assert "invalid_skill_front_matter" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_catalog_matches_every_installed_skill_and_preserves_legacy_design_ids() -> None:
+    report = validate_plugin.catalog_report()
+    assert report["catalog_skill_count"] == 175
+    assert report["implemented_skill_count"] == 175
+    assert report["legacy_design_id_count"] == 172
+    assert report["bounded_workflow_skill_count"] == 31
+    assert report["strict_match"] is True
+    assert report["catalog_only"] == []
+    assert report["implementation_only"] == []
+    assert report["missing_legacy_mappings"] == []
+    assert report["unexpected_legacy_mappings"] == []
+    assert report["misdirected_legacy_mappings"] == []
+    assert report["duplicate_legacy_mapping_targets"] == []
+
+
+def test_plugin_validator_rejects_catalog_mapping_drift(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    mapping_path = plugin_root / "shared/legacy-skill-map-v0.2.yaml"
+    mapping = load_yaml(mapping_path)
+    mapping["legacy_to_canonical"].pop("analysis-run-register")
+    write_yaml(mapping_path, mapping)
+    assert "legacy_mapping_coverage" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_plugin_validator_rejects_missing_catalog_validation_reference(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    catalog_path = plugin_root / "shared/skill-catalog-v0.2.yaml"
+    catalog = load_yaml(catalog_path)
+    catalog["packs"][0]["skills"][0].pop("validation")
+    write_yaml(catalog_path, catalog)
+    assert "catalog_validation_level" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_plugin_validator_rejects_verification_matrix_coverage_gap(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    matrix_path = plugin_root / "shared/verification-matrix-v0.2.yaml"
+    matrix = load_yaml(matrix_path)
+    matrix["cases"].pop()
+    write_yaml(matrix_path, matrix)
+    assert "verification_matrix_missing_acceptance" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_plugin_validator_rejects_stale_verification_test_reference(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    matrix_path = plugin_root / "shared/verification-matrix-v0.2.yaml"
+    matrix = load_yaml(matrix_path)
+    structural_case = next(case for case in matrix["cases"] if case["kind"] == "structural")
+    structural_case["test_case"] = "test_that_does_not_exist"
+    write_yaml(matrix_path, matrix)
+    assert "verification_test_case_missing" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_plugin_validator_rejects_profile_registry_schema_drift(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    schema_path = plugin_root / "shared/project-schema.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    schema["properties"]["profile"]["enum"] = []
+    schema_path.write_text(json.dumps(schema, ensure_ascii=False, indent=2), encoding="utf-8")
+    assert "profile_registry_schema_drift" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_plugin_validator_rejects_incomplete_bounded_beta_workflow(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    skill_path = plugin_root / "skills/article-pattern-fit/SKILL.md"
+    skill_path.write_text(
+        skill_path.read_text(encoding="utf-8").replace("## 安全边界", "## 约束"),
+        encoding="utf-8",
+    )
+    assert "incomplete_beta_workflow" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def completed_pilot_attestation() -> dict:
+    return {
+        "schema_version": "0.2",
+        "authorization": "confirmed",
+        "deidentification": "confirmed",
+        "public_report_consent": "confirmed",
+        "pilot_steps": sorted(pilot_audit.REQUIRED_STEPS),
+        "commands": [{"name": "research_contract_validate", "exit_code": 0}],
+        "human_confirmations": [{"artifact_id": "context-brief-001", "confirmed_at": "2026-09-10T08:30:00Z"}],
+    }
+
+
+def pilot_project_with_gap_card(tmp_path: Path) -> Path:
+    project = copied_v02_project(tmp_path)
+    gap_card = {
+        "schema_version": "0.2", "id": "gap-card-001", "type": "gap_card", "version": 1,
+        "created_at": "2026-09-10T09:30:00Z", "created_by": "skill", "status": "draft",
+        "depends_on": ["context-brief-001"], "supersedes": None, "change_reason": "记录可复核的研究空白",
+        "provenance": "project_generated", "verification_status": "ai_extracted", "manuscript_eligibility": "not_eligible",
+    }
+    gap_path = project / ".research/artifacts/gap-card-001.yaml"
+    write_yaml(gap_path, gap_card)
+    project_path = project / ".research/project.yaml"
+    manifest = load_yaml(project_path)
+    manifest["artifact_index"].append({key: gap_card[key] for key in ("id", "type", "version", "status", "created_at", "created_by", "depends_on", "supersedes", "change_reason")} | {"path": "artifacts/gap-card-001.yaml"})
+    write_yaml(project_path, manifest)
+    assert contract.validate_project(project) == []
+    return project
+
+
+def test_pilot_audit_outputs_only_redacted_completed_report(tmp_path: Path) -> None:
+    project = pilot_project_with_gap_card(tmp_path)
+    attestation_path = tmp_path / "attestation.yaml"
+    write_yaml(attestation_path, completed_pilot_attestation())
+    report, findings = pilot_audit.audit_pilot(project, attestation_path)
+    assert findings == []
+    assert report["status"] == "completed_limited"
+    assert report["redacted"] is True
+    assert "title" not in report
+    assert {artifact["type"] for artifact in report["artifacts"]}.issuperset({"context_brief", "timeline_baseline", "gap_card", "board_decision"})
+
+
+def test_pilot_audit_blocks_sensitive_or_unconfirmed_attestation(tmp_path: Path) -> None:
+    project = pilot_project_with_gap_card(tmp_path)
+    attestation = completed_pilot_attestation() | {"title": "must not be published"}
+    attestation["authorization"] = "not_confirmed"
+    attestation_path = tmp_path / "attestation.yaml"
+    write_yaml(attestation_path, attestation)
+    report, findings = pilot_audit.audit_pilot(project, attestation_path)
+    assert report["status"] == "blocked"
+    assert {item.code for item in findings}.issuperset({"sensitive_attestation_field", "authorization_missing"})
+
+
+def test_pilot_audit_cli_writes_new_redacted_report(tmp_path: Path) -> None:
+    project = pilot_project_with_gap_card(tmp_path)
+    attestation_path = tmp_path / "attestation.yaml"
+    report_path = tmp_path / "redacted-report.yaml"
+    write_yaml(attestation_path, completed_pilot_attestation())
+    assert pilot_audit.main([str(project), "--attestation", str(attestation_path), "--report", str(report_path)]) == 0
+    report = load_yaml(report_path)
+    assert report["status"] == "completed_limited"
+    assert report["redacted"] is True

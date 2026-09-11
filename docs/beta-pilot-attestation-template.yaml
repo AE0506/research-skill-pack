@@ -1,0 +1,18 @@
+# Copy this file outside the repository before use. Do not add free-text notes.
+schema_version: "0.2"
+authorization: confirmed
+deidentification: confirmed
+public_report_consent: confirmed
+pilot_steps:
+  - constraints_capture
+  - context_brief
+  - timeline_baseline
+  - gap_card
+  - review_board
+  - review_board_confirmation
+commands:
+  - name: research_contract_validate
+    exit_code: 0
+human_confirmations:
+  - artifact_id: replace-with-confirmed-artifact-id
+    confirmed_at: "2026-01-01T00:00:00Z"

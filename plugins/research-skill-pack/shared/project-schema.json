@@ -8,7 +8,7 @@
   "properties": {
     "schema_version": {"enum": ["0.1", "0.2"]},
     "project_id": {"$ref": "#/$defs/id"},
-    "profile": {"const": "zh-undergrad-information-management-empirical"},
+    "profile": {"type": "string", "enum": ["zh-undergrad-information-management-empirical"]},
     "title": {"type": "string", "minLength": 1},
     "current_state": {"$ref": "#/$defs/state"},
     "writer_mode": {"const": "single_user_serial"},
