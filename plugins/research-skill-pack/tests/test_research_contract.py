@@ -352,6 +352,15 @@ def test_catalog_matches_every_installed_skill_and_preserves_legacy_design_ids()
     assert report["duplicate_legacy_mapping_targets"] == []
 
 
+def test_every_installed_skill_has_an_operational_work_card() -> None:
+    report = validate_plugin.skill_depth_report()
+    assert report["skill_count"] == 175
+    assert report["operational_skill_count"] == 175
+    assert report["minimum_body_lines"] >= validate_plugin.MIN_OPERATIONAL_BODY_LINES
+    assert validate_plugin.validate_skill_workflows() == []
+    assert "not model adherence" in report["evidence_boundary"]
+
+
 def test_plugin_validator_rejects_catalog_mapping_drift(tmp_path: Path) -> None:
     plugin_root = tmp_path / "plugin"
     shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
@@ -412,6 +421,28 @@ def test_plugin_validator_rejects_incomplete_bounded_beta_workflow(tmp_path: Pat
         encoding="utf-8",
     )
     assert "incomplete_beta_workflow" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_plugin_validator_rejects_missing_operational_workflow_section(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    skill_path = plugin_root / "skills/topic-feasibility-analyzer/SKILL.md"
+    skill_path.write_text(
+        skill_path.read_text(encoding="utf-8").replace("## 执行协议", "## 被删除的执行协议", 1),
+        encoding="utf-8",
+    )
+    assert "incomplete_operational_workflow" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_plugin_validator_rejects_skill_work_card_that_omits_its_catalog_output(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    skill_path = plugin_root / "skills/research-orchestrator/SKILL.md"
+    skill_path.write_text(
+        skill_path.read_text(encoding="utf-8").replace("`route_advice`", "route advice"),
+        encoding="utf-8",
+    )
+    assert "operational_workflow_contract_gap" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
 
 
 def completed_pilot_attestation() -> dict:

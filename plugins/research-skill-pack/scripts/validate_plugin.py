@@ -42,6 +42,16 @@ BETA_WORKFLOW_MARKERS = (
     "## 安全边界",
     "## 参考",
 )
+OPERATIONAL_WORKFLOW_MARKERS = (
+    "## 何时使用",
+    "## 前置核对",
+    "## 执行协议",
+    "## 产物与记录",
+    "## 判断、失败与交接",
+    "## 证据与安全边界",
+    "## 参考",
+)
+MIN_OPERATIONAL_BODY_LINES = 65
 
 
 @dataclass(frozen=True)
@@ -112,6 +122,95 @@ def _catalog_skill_records(plugin_root: Path) -> list[dict[str, Any]]:
     except ValueError:
         return []
     return [skill for skill, _ in _catalog_entries(catalog) if isinstance(skill, dict)] if isinstance(catalog, dict) else []
+
+
+def _skill_body(text: str) -> str:
+    """Return Markdown after a valid front-matter block, or all text if malformed."""
+    if not text.startswith("---\n"):
+        return text
+    closing = text.find("\n---\n", 4)
+    return text[closing + 5:] if closing != -1 else text
+
+
+def _operational_section(text: str) -> str:
+    """Extract the bounded execution section for a lightweight depth check."""
+    match = re.search(r"^## 执行协议\n(.*?)(?=^## |\Z)", text, flags=re.MULTILINE | re.DOTALL)
+    return match.group(1) if match else ""
+
+
+def validate_skill_workflows(plugin_root: Path = PLUGIN_ROOT) -> list[Finding]:
+    """Require every installed Skill to expose its own usable, bounded work card.
+
+    This checks instructional completeness only. It deliberately does not infer
+    that a model followed the instructions or that a research conclusion is true.
+    """
+    catalog_by_id = {item.get("id"): item for item in _catalog_skill_records(plugin_root)}
+    findings: list[Finding] = []
+    skills_root = plugin_root / SKILLS_PATH
+    if not skills_root.is_dir():
+        return [Finding("missing_skills_directory", "skills directory is missing", str(skills_root))]
+
+    for skill_dir in sorted(item for item in skills_root.iterdir() if item.is_dir()):
+        skill_path = skill_dir / "SKILL.md"
+        try:
+            text = skill_path.read_text(encoding="utf-8")
+        except OSError:
+            findings.append(Finding("missing_skill_file", "SKILL.md is missing", str(skill_path)))
+            continue
+        metadata = _front_matter(skill_path)
+        if metadata is None:
+            continue
+        if metadata.get("workflow_depth") != "operational":
+            findings.append(Finding(
+                "missing_operational_workflow_depth",
+                "every installed Skill must declare workflow_depth: operational",
+                str(skill_path),
+            ))
+        body = _skill_body(text)
+        body_lines = [line for line in body.splitlines() if line.strip()]
+        if len(body_lines) < MIN_OPERATIONAL_BODY_LINES:
+            findings.append(Finding(
+                "skill_instruction_too_short",
+                f"operational Skill body needs at least {MIN_OPERATIONAL_BODY_LINES} non-empty lines",
+                str(skill_path),
+            ))
+        missing_markers = [marker for marker in OPERATIONAL_WORKFLOW_MARKERS if marker not in body]
+        if missing_markers:
+            findings.append(Finding(
+                "incomplete_operational_workflow",
+                f"operational Skill is missing sections: {', '.join(missing_markers)}",
+                str(skill_path),
+            ))
+        steps = re.findall(r"^\d+\. ", _operational_section(body), flags=re.MULTILINE)
+        if len(steps) < 5:
+            findings.append(Finding(
+                "operational_workflow_too_shallow",
+                "执行协议 must contain at least five numbered actions",
+                str(skill_path),
+            ))
+        if "artifact_id:" not in body or "requires_confirmation" not in body or "blocked" not in body:
+            findings.append(Finding(
+                "operational_workflow_missing_outcome_template",
+                "Skill needs an artifact template and explicit confirmation/blocked outcomes",
+                str(skill_path),
+            ))
+        catalog_skill = catalog_by_id.get(skill_dir.name)
+        if not isinstance(catalog_skill, dict):
+            continue
+        contract_terms = [
+            value
+            for key in ("inputs", "outputs", "gates", "safety")
+            for value in catalog_skill.get(key, [])
+            if isinstance(value, str)
+        ]
+        missing_contract_terms = [term for term in contract_terms if f"`{term}`" not in body]
+        if missing_contract_terms:
+            findings.append(Finding(
+                "operational_workflow_contract_gap",
+                "Skill work card must name its own Catalog contract terms: " + ", ".join(missing_contract_terms),
+                str(skill_path),
+            ))
+    return findings
 
 
 def validate_catalog(plugin_root: Path = PLUGIN_ROOT) -> list[Finding]:
@@ -361,6 +460,7 @@ def validate_plugin(plugin_root: Path = PLUGIN_ROOT) -> list[Finding]:
     findings.extend(validate_catalog(plugin_root))
     findings.extend(validate_profile_registry(plugin_root))
     findings.extend(validate_verification_matrix(plugin_root))
+    findings.extend(validate_skill_workflows(plugin_root))
     return findings
 
 
@@ -450,18 +550,64 @@ def verification_report(plugin_root: Path = PLUGIN_ROOT) -> dict[str, Any]:
     }
 
 
+def skill_depth_report(plugin_root: Path = PLUGIN_ROOT) -> dict[str, Any]:
+    """Report instruction-card coverage without calling it behavioral validation."""
+    records = _catalog_skill_records(plugin_root)
+    catalog = _read_yaml(plugin_root / CATALOG_PATH)
+    pack_for_skill = {
+        skill.get("id"): pack.get("id", "unknown")
+        for pack in catalog.get("packs", [])
+        if isinstance(pack, dict)
+        for skill in pack.get("skills", [])
+        if isinstance(skill, dict) and isinstance(skill.get("id"), str)
+    } if isinstance(catalog, dict) else {}
+    by_pack: dict[str, list[int]] = {}
+    all_body_lines: list[int] = []
+    operational_count = 0
+    for record in records:
+        skill_id = record.get("id")
+        if not isinstance(skill_id, str):
+            continue
+        path = plugin_root / SKILLS_PATH / skill_id / "SKILL.md"
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        body_line_count = len([line for line in _skill_body(text).splitlines() if line.strip()])
+        all_body_lines.append(body_line_count)
+        metadata = _front_matter(path) or {}
+        if metadata.get("workflow_depth") == "operational":
+            operational_count += 1
+        pack_id = str(pack_for_skill.get(skill_id, "unknown"))
+        by_pack.setdefault(pack_id, []).append(body_line_count)
+    return {
+        "skill_count": len(records),
+        "operational_skill_count": operational_count,
+        "minimum_body_lines": min(all_body_lines) if all_body_lines else 0,
+        "average_body_lines": round(sum(all_body_lines) / len(all_body_lines), 1) if all_body_lines else 0,
+        "required_sections": list(OPERATIONAL_WORKFLOW_MARKERS),
+        "pack_body_line_ranges": {
+            pack_id: {"count": len(counts), "minimum": min(counts), "average": round(sum(counts) / len(counts), 1)}
+            for pack_id, counts in sorted(by_pack.items())
+        },
+        "evidence_boundary": "This report measures instruction-card completeness, not model adherence, research quality, or external fact verification.",
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Validate the local Research Skill Pack package without network or model calls.")
     parser.add_argument("--root", type=Path, default=PLUGIN_ROOT, help="plugin root to validate")
     parser.add_argument("--catalog-report", action="store_true", help="print catalog-to-implementation drift; does not change validation status")
     parser.add_argument("--verification-report", action="store_true", help="print acceptance-to-verification coverage without claiming model behavior coverage")
+    parser.add_argument("--skill-depth-report", action="store_true", help="print 175-Skill instruction-card coverage without claiming model behavior coverage")
     parser.add_argument("--json", action="store_true", help="emit machine-readable output")
     args = parser.parse_args(argv)
     findings = validate_plugin(args.root)
     report = catalog_report(args.root) if args.catalog_report else None
     matrix_report = verification_report(args.root) if args.verification_report else None
+    depth_report = skill_depth_report(args.root) if args.skill_depth_report else None
     if args.json:
-        print(json.dumps({"valid": not findings, "findings": [item.as_dict() for item in findings], "catalog_report": report, "verification_report": matrix_report}, ensure_ascii=False, indent=2))
+        print(json.dumps({"valid": not findings, "findings": [item.as_dict() for item in findings], "catalog_report": report, "verification_report": matrix_report, "skill_depth_report": depth_report}, ensure_ascii=False, indent=2))
     elif findings:
         for item in findings:
             location = f" [{item.path}]" if item.path else ""
@@ -470,12 +616,16 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(report, ensure_ascii=False, indent=2))
         if matrix_report is not None:
             print(json.dumps(matrix_report, ensure_ascii=False, indent=2))
+        if depth_report is not None:
+            print(json.dumps(depth_report, ensure_ascii=False, indent=2))
     else:
         print("VALID: manifest, Skill front matter, Catalog inventory, verification mapping, profile registry, and synthetic fixtures")
         if report is not None:
             print(json.dumps(report, ensure_ascii=False, indent=2))
         if matrix_report is not None:
             print(json.dumps(matrix_report, ensure_ascii=False, indent=2))
+        if depth_report is not None:
+            print(json.dumps(depth_report, ensure_ascii=False, indent=2))
     return 0 if not findings else 1
 
 

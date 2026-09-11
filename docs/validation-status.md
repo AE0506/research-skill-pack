@@ -8,9 +8,9 @@
 
 - 插件的 Catalog 与已安装 Skill 目录严格一致：175 个 Catalog 条目对应 175 个 `SKILL.md` 目录；172 个旧设计 ID 保留为一对一兼容映射。
 - 本地校验器检查插件清单、Skill 元数据、Catalog/目录/映射一致性、两套合成项目 fixture 和项目契约。
-- 自动化测试覆盖项目 schema、状态闸门、迁移、时间线、原始数据隔离、Catalog 映射、Profile Registry、验证矩阵与短 Skill 工作流模板。
+- 自动化测试覆盖项目 schema、状态闸门、迁移、时间线、原始数据隔离、Catalog 映射、Profile Registry、验证矩阵，以及 175 张 Skill 操作深度卡的段落、长度、Catalog 契约镜像与失败回归。
 - 175 个 `acceptance_id` 均映射到一条验证记录：160 条结构检查、8 条确定性契约测试、7 条人工真实试跑步骤。映射完整性不等于 175 项独立的模型功能测试。
-- 31 个曾为短接口说明的投稿、期刊、评审和返修 Skill 已有最小受限工作流结构；这不等同于它们各自都完成行为级测试。
+- 所有 175 个 Skill 都有操作深度卡：各自的前置核对、至少五步执行协议、版本化记录模板、`requires_confirmation`/`blocked` 分支、证据边界和最小情境演练。该结构化完整性不等同于它们各自完成行为级测试。
 
 可复核命令：
 
@@ -20,6 +20,7 @@ python3 -m pytest -q
 python3 scripts/validate_plugin.py
 python3 scripts/validate_plugin.py --catalog-report
 python3 scripts/validate_plugin.py --verification-report
+python3 scripts/validate_plugin.py --skill-depth-report
 ```
 
 以上命令不调用模型、不联网、不读取真实项目原始数据。

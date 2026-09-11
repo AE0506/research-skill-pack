@@ -629,7 +629,7 @@ plugins/research-skill-pack/
 
 ## 验证与贡献
 
-本仓库包含针对 schema、artifact、状态闸门、迁移、时间线与安全边界的可执行测试。`validate_plugin.py` 还会校验插件清单、所有 Skill 的可发现元数据、175 条 Catalog 与目录的严格一致性、172 条兼容映射、Profile Registry、31 条受限短工作流和两套合成 fixtures。`verification-matrix-v0.2.yaml` 为 175 条验收 ID 提供唯一验证路径，但明确区分结构、确定性契约与人工试跑，不把它们混为模型行为测试。合成 fixtures 仅用于验证本地契约，绝不能进入真实论文或作为研究数据。
+本仓库包含针对 schema、artifact、状态闸门、迁移、时间线与安全边界的可执行测试。`validate_plugin.py` 还会校验插件清单、所有 Skill 的可发现元数据、175 条 Catalog 与目录的严格一致性、172 条兼容映射、Profile Registry、175 张逐项操作深度卡和两套合成 fixtures。每张操作卡镜像自己的输入、输出、闸门与安全规则，并提供分步协议、记录模板、失败分支和最小情境演练；[深度报告](docs/skill-depth-standard-v0.2.md)只检查这些说明是否完整，不把它说成模型行为测试。`verification-matrix-v0.2.yaml` 为 175 条验收 ID 提供唯一验证路径，但明确区分结构、确定性契约与人工试跑，不把它们混为模型行为测试。合成 fixtures 仅用于验证本地契约，绝不能进入真实论文或作为研究数据。
 
 ```bash
 cd plugins/research-skill-pack
@@ -637,6 +637,7 @@ python3 -m pytest -q
 python3 scripts/validate_plugin.py
 python3 scripts/validate_plugin.py --catalog-report
 python3 scripts/validate_plugin.py --verification-report
+python3 scripts/validate_plugin.py --skill-depth-report
 ```
 
 ### 已验证
