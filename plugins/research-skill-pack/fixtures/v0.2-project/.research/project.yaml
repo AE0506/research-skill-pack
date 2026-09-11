@@ -5,6 +5,7 @@ title: 生成式 AI 使用与大学生信息搜寻行为
 current_state: design_ready
 writer_mode: single_user_serial
 write_sequence: 5
+mutation_revision: 0
 security:
   sensitive_data_model_access: forbidden_by_default
   external_submission: forbidden

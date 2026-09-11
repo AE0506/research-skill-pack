@@ -103,3 +103,11 @@ project_registration_draft:
 - `research-project-initializer` 是否仅处理已声明的输入，并让 `project_registration_draft` 可以回到具体的输入定位？
 - `new-project-only` 是否有明确的 `pass`、`requires_confirmation` 或 `blocked` 结果，而不是被隐含跳过？
 - 本次记录是否保留了证据限制、未决项与下游影响，且没有把草稿或模型推断升级为事实？
+
+## 规范化写入
+
+- **策略：**`advisory`。本 Skill 不拥有 canonical artifact 或状态迁移权限；唯一权限来源是 [规范化写入策略表](../../shared/canonical-mutation-policy-v0.2.yaml)。
+- **本地草稿：**可形成受限建议、人工待确认记录或工作草图，但不得直接创建、修改或覆写 `<project>/.research/project.yaml` 与其 `artifacts/`。
+- **需要固化时：**将 artifact 类型、依赖、状态影响和最小证据交接给策略表中明确的 `canonical_writer`，不根据名称相似性自行选择写入者。
+- **收据边界：**只有写入者完成 `validate_canonical_change` 与 `commit_canonical_change` 并返回 `receipt_id`，内容才可称为 canonical 项目记录；否则保持为草稿、建议或 `blocked`。
+- **安全边界：**不得借由草稿绕开原始数据、人工确认、状态闸门或外部系统限制；无收据写入会在试跑审计中被视为不可复核。

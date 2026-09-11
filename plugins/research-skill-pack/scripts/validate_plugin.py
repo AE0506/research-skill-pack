@@ -34,7 +34,18 @@ LEGACY_MAP_PATH = Path("shared/legacy-skill-map-v0.2.yaml")
 VERIFICATION_MATRIX_PATH = Path("shared/verification-matrix-v0.2.yaml")
 PROFILE_REGISTRY_PATH = Path("shared/profile-registry-v0.2.json")
 PROJECT_SCHEMA_PATH = Path("shared/project-schema.json")
+MUTATION_POLICY_PATH = Path("shared/canonical-mutation-policy-v0.2.yaml")
+ROUTE_MAP_PATH = Path("shared/canonical-route-map-v0.2.yaml")
+MCP_CONFIG_PATH = Path(".mcp.json")
+RUNTIME_FILES = (
+    Path("scripts/research_state.py"),
+    Path("scripts/research_state_mcp.py"),
+    Path("scripts/research-state-mcp"),
+    Path("scripts/bootstrap_runtime.py"),
+    Path("requirements-runtime.txt"),
+)
 VALIDATION_LEVELS = {"structural", "deterministic_contract", "manual_pilot"}
+MUTATION_MODES = {"advisory", "orchestrator", "canonical_writer"}
 BETA_WORKFLOW_MARKERS = (
     "## 前置输入",
     "## 执行步骤",
@@ -402,6 +413,145 @@ def validate_verification_matrix(plugin_root: Path = PLUGIN_ROOT) -> list[Findin
     return findings
 
 
+def _artifact_types(plugin_root: Path) -> set[str]:
+    schema = _read_json(plugin_root / PROJECT_SCHEMA_PATH)
+    values = schema.get("$defs", {}).get("artifactIndex", {}).get("properties", {}).get("type", {}).get("enum", [])
+    return set(values) if isinstance(values, list) and all(isinstance(item, str) for item in values) else set()
+
+
+def validate_mcp_runtime(plugin_root: Path = PLUGIN_ROOT) -> list[Finding]:
+    """Require the plugin to ship a discoverable local MCP runtime, not hooks."""
+    findings: list[Finding] = []
+    manifest_path = plugin_root / MANIFEST_PATH
+    try:
+        manifest = _read_json(manifest_path)
+    except ValueError as exc:
+        return [Finding("invalid_manifest", str(exc), str(manifest_path))]
+    if not isinstance(manifest, dict) or manifest.get("mcpServers") != "./.mcp.json":
+        findings.append(Finding("missing_mcp_manifest", "plugin manifest must declare mcpServers: ./.mcp.json", str(manifest_path)))
+    config_path = plugin_root / MCP_CONFIG_PATH
+    try:
+        config = _read_json(config_path)
+    except ValueError as exc:
+        return findings + [Finding("invalid_mcp_config", str(exc), str(config_path))]
+    server = config.get("mcpServers", {}).get("research-state") if isinstance(config, dict) and isinstance(config.get("mcpServers"), dict) else None
+    if not isinstance(server, dict) or server.get("command") != "bash" or server.get("args") != ["./scripts/research-state-mcp"] or server.get("cwd") != ".":
+        findings.append(Finding("invalid_research_state_server", "research-state must use the isolated runtime launcher", str(config_path)))
+    for relative_path in RUNTIME_FILES:
+        path = plugin_root / relative_path
+        if not path.is_file():
+            findings.append(Finding("missing_runtime_file", f"missing bundled runtime file {relative_path}", str(path)))
+    runtime_requirements = plugin_root / "requirements-runtime.txt"
+    if runtime_requirements.is_file() and "mcp==" not in runtime_requirements.read_text(encoding="utf-8"):
+        findings.append(Finding("unlocked_mcp_runtime", "requirements-runtime.txt must pin mcp", str(runtime_requirements)))
+    return findings
+
+
+def _policy_document(plugin_root: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
+    path = plugin_root / MUTATION_POLICY_PATH
+    try:
+        document = _read_yaml(path)
+    except ValueError as exc:
+        return None, [Finding("invalid_mutation_policy", str(exc), str(path))]
+    if not isinstance(document, dict) or not isinstance(document.get("skills"), list):
+        return None, [Finding("invalid_mutation_policy", "policy requires a skills list", str(path))]
+    return document, []
+
+
+def validate_mutation_policy(plugin_root: Path = PLUGIN_ROOT) -> list[Finding]:
+    """Keep exact Skill authorization, canonical artifact writers, and routes aligned."""
+    document, findings = _policy_document(plugin_root)
+    if document is None:
+        return findings
+    catalog_ids = {record.get("id") for record in _catalog_skill_records(plugin_root) if isinstance(record.get("id"), str)}
+    artifact_types = _artifact_types(plugin_root)
+    policy_by_id: dict[str, dict[str, Any]] = {}
+    covered_types: set[str] = set()
+    for index, entry in enumerate(document["skills"]):
+        location = f"{plugin_root / MUTATION_POLICY_PATH}:skills.{index}"
+        if not isinstance(entry, dict):
+            findings.append(Finding("invalid_mutation_policy_entry", "each policy entry must be an object", location))
+            continue
+        skill_id, mode = entry.get("id"), entry.get("mode")
+        artifact_values, transitions = entry.get("artifact_types"), entry.get("transitions")
+        if not isinstance(skill_id, str) or not isinstance(mode, str) or not isinstance(artifact_values, list) or not isinstance(transitions, list):
+            findings.append(Finding("mutation_policy_required_field", "policy entries need id, mode, artifact_types, and transitions", location))
+            continue
+        if skill_id in policy_by_id:
+            findings.append(Finding("duplicate_mutation_policy_skill", f"duplicate policy Skill {skill_id!r}", location))
+            continue
+        policy_by_id[skill_id] = entry
+        if mode not in MUTATION_MODES:
+            findings.append(Finding("invalid_mutation_policy_mode", f"unsupported policy mode {mode!r}", location))
+        invalid_types = [item for item in artifact_values if not isinstance(item, str) or item not in artifact_types]
+        if invalid_types:
+            findings.append(Finding("invalid_policy_artifact_type", "policy references an unknown canonical artifact type", location))
+        covered_types.update(item for item in artifact_values if isinstance(item, str) and item in artifact_types)
+        transition_pairs: set[tuple[str, str]] = set()
+        for transition in transitions:
+            if not isinstance(transition, dict) or not isinstance(transition.get("from"), str) or not isinstance(transition.get("to"), str):
+                findings.append(Finding("invalid_policy_transition", "policy transitions require string from/to states", location))
+                continue
+            pair = (transition["from"], transition["to"])
+            if pair in transition_pairs:
+                findings.append(Finding("duplicate_policy_transition", "policy repeats a state transition", location))
+            transition_pairs.add(pair)
+            if research_contract.transition_findings(*pair):
+                findings.append(Finding("illegal_policy_transition", f"policy transition {pair[0]} → {pair[1]} violates the project state machine", location))
+        if mode in {"advisory", "orchestrator"} and (artifact_values or transitions):
+            findings.append(Finding("read_only_policy_write", "advisory/orchestrator Skills cannot own canonical writes", location))
+        if mode == "canonical_writer" and not artifact_values and not transitions:
+            findings.append(Finding("empty_canonical_writer", "canonical_writer must own an artifact type or state transition", location))
+    if set(policy_by_id) != catalog_ids:
+        findings.append(Finding("mutation_policy_catalog_drift", "policy Skill ids must exactly equal Catalog Skill ids", str(plugin_root / MUTATION_POLICY_PATH)))
+    if covered_types != artifact_types:
+        findings.append(Finding("mutation_policy_artifact_coverage", "every canonical artifact type needs at least one explicit writer", str(plugin_root / MUTATION_POLICY_PATH)))
+    if policy_by_id.get("research-orchestrator", {}).get("mode") != "orchestrator":
+        findings.append(Finding("orchestrator_policy", "research-orchestrator must be the sole orchestrator policy entry", str(plugin_root / MUTATION_POLICY_PATH)))
+
+    route_path = plugin_root / ROUTE_MAP_PATH
+    try:
+        route_document = _read_yaml(route_path)
+    except ValueError as exc:
+        return findings + [Finding("invalid_route_map", str(exc), str(route_path))]
+    routes = route_document.get("routes") if isinstance(route_document, dict) else None
+    if not isinstance(routes, list):
+        return findings + [Finding("invalid_route_map", "route map requires routes", str(route_path))]
+    expected_pairs = set(zip(research_contract.NORMAL_STATES, research_contract.NORMAL_STATES[1:]))
+    route_pairs: set[tuple[str, str]] = set()
+    for index, route in enumerate(routes):
+        location = f"{route_path}:routes.{index}"
+        if not isinstance(route, dict):
+            findings.append(Finding("invalid_route", "each route must be an object", location))
+            continue
+        required = ("id", "from_state", "to_state", "transition_owner", "required_skill_ids", "required_artifact_types")
+        if any(key not in route for key in required):
+            findings.append(Finding("route_required_field", "route is missing a required field", location))
+            continue
+        pair = (route["from_state"], route["to_state"])
+        route_pairs.add(pair)
+        owner = policy_by_id.get(route["transition_owner"])
+        if not isinstance(owner, dict) or pair not in {(item.get("from"), item.get("to")) for item in owner.get("transitions", []) if isinstance(item, dict)}:
+            findings.append(Finding("route_owner_policy_mismatch", "route transition_owner must own this exact state transition", location))
+        if not isinstance(route["required_skill_ids"], list) or not set(route["required_skill_ids"]).issubset(catalog_ids):
+            findings.append(Finding("route_unknown_skill", "route references an unknown Skill", location))
+        if not isinstance(route["required_artifact_types"], list) or not set(route["required_artifact_types"]).issubset(artifact_types):
+            findings.append(Finding("route_unknown_artifact", "route references an unknown canonical artifact type", location))
+    if route_pairs != expected_pairs:
+        findings.append(Finding("route_map_coverage", "route map must cover every normal next-state transition exactly", str(route_path)))
+
+    for skill_id, entry in policy_by_id.items():
+        skill_path = plugin_root / SKILLS_PATH / skill_id / "SKILL.md"
+        if not skill_path.is_file():
+            continue
+        text = skill_path.read_text(encoding="utf-8")
+        if "## 规范化写入" not in text or f"`{entry.get('mode')}`" not in text or "canonical-mutation-policy-v0.2.yaml" not in text:
+            findings.append(Finding("skill_mutation_policy_gap", "Skill must mirror its explicit canonical mutation policy", str(skill_path)))
+        if entry.get("mode") == "canonical_writer" and ("validate_canonical_change" not in text or "commit_canonical_change" not in text):
+            findings.append(Finding("writer_mcp_protocol_missing", "canonical writers must name the MCP preflight and commit tools", str(skill_path)))
+    return findings
+
+
 def validate_plugin(plugin_root: Path = PLUGIN_ROOT) -> list[Finding]:
     """Return structural errors for a checked-out plugin package."""
     findings: list[Finding] = []
@@ -419,6 +569,7 @@ def validate_plugin(plugin_root: Path = PLUGIN_ROOT) -> list[Finding]:
         findings.append(Finding("manifest_name", "manifest name must be research-skill-pack", str(manifest_path)))
     if manifest.get("skills") != "./skills/":
         findings.append(Finding("manifest_skills_path", "manifest skills path must be ./skills/", str(manifest_path)))
+    findings.extend(validate_mcp_runtime(plugin_root))
 
     skills_root = plugin_root / SKILLS_PATH
     if not skills_root.is_dir():
@@ -461,6 +612,7 @@ def validate_plugin(plugin_root: Path = PLUGIN_ROOT) -> list[Finding]:
     findings.extend(validate_profile_registry(plugin_root))
     findings.extend(validate_verification_matrix(plugin_root))
     findings.extend(validate_skill_workflows(plugin_root))
+    findings.extend(validate_mutation_policy(plugin_root))
     return findings
 
 
@@ -594,20 +746,65 @@ def skill_depth_report(plugin_root: Path = PLUGIN_ROOT) -> dict[str, Any]:
     }
 
 
+def mutation_policy_report(plugin_root: Path = PLUGIN_ROOT) -> dict[str, Any]:
+    """Report runtime authorization coverage without calling it an OS-level sandbox."""
+    document, findings = _policy_document(plugin_root)
+    entries = document.get("skills", []) if isinstance(document, dict) else []
+    mode_counts = {mode: 0 for mode in sorted(MUTATION_MODES)}
+    artifact_types: set[str] = set()
+    transition_pairs: set[tuple[str, str]] = set()
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        mode = entry.get("mode")
+        if mode in mode_counts:
+            mode_counts[mode] += 1
+        artifact_types.update(item for item in entry.get("artifact_types", []) if isinstance(item, str))
+        transition_pairs.update(
+            (item.get("from"), item.get("to"))
+            for item in entry.get("transitions", [])
+            if isinstance(item, dict) and isinstance(item.get("from"), str) and isinstance(item.get("to"), str)
+        )
+    try:
+        route_document = _read_yaml(plugin_root / ROUTE_MAP_PATH)
+        routes = route_document.get("routes", []) if isinstance(route_document, dict) else []
+    except ValueError:
+        routes = []
+    expected_pairs = set(zip(research_contract.NORMAL_STATES, research_contract.NORMAL_STATES[1:]))
+    route_pairs = {
+        (route.get("from_state"), route.get("to_state"))
+        for route in routes
+        if isinstance(route, dict) and isinstance(route.get("from_state"), str) and isinstance(route.get("to_state"), str)
+    }
+    return {
+        "policy_skill_count": len(entries),
+        "mode_counts": mode_counts,
+        "canonical_artifact_type_count": len(artifact_types),
+        "canonical_artifact_type_coverage": artifact_types == _artifact_types(plugin_root),
+        "owned_transition_count": len(transition_pairs),
+        "route_count": len(routes),
+        "normal_route_coverage": route_pairs == expected_pairs,
+        "findings": [item.as_dict() for item in findings],
+        "evidence_boundary": "The MCP gate constrains the normal plugin write path and produces receipts. It cannot prevent a user or arbitrary terminal command from editing the local filesystem.",
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Validate the local Research Skill Pack package without network or model calls.")
     parser.add_argument("--root", type=Path, default=PLUGIN_ROOT, help="plugin root to validate")
     parser.add_argument("--catalog-report", action="store_true", help="print catalog-to-implementation drift; does not change validation status")
     parser.add_argument("--verification-report", action="store_true", help="print acceptance-to-verification coverage without claiming model behavior coverage")
     parser.add_argument("--skill-depth-report", action="store_true", help="print 175-Skill instruction-card coverage without claiming model behavior coverage")
+    parser.add_argument("--mutation-policy-report", action="store_true", help="print exact canonical-write authorization and route coverage without claiming OS-level enforcement")
     parser.add_argument("--json", action="store_true", help="emit machine-readable output")
     args = parser.parse_args(argv)
     findings = validate_plugin(args.root)
     report = catalog_report(args.root) if args.catalog_report else None
     matrix_report = verification_report(args.root) if args.verification_report else None
     depth_report = skill_depth_report(args.root) if args.skill_depth_report else None
+    policy_report = mutation_policy_report(args.root) if args.mutation_policy_report else None
     if args.json:
-        print(json.dumps({"valid": not findings, "findings": [item.as_dict() for item in findings], "catalog_report": report, "verification_report": matrix_report, "skill_depth_report": depth_report}, ensure_ascii=False, indent=2))
+        print(json.dumps({"valid": not findings, "findings": [item.as_dict() for item in findings], "catalog_report": report, "verification_report": matrix_report, "skill_depth_report": depth_report, "mutation_policy_report": policy_report}, ensure_ascii=False, indent=2))
     elif findings:
         for item in findings:
             location = f" [{item.path}]" if item.path else ""
@@ -618,6 +815,8 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(matrix_report, ensure_ascii=False, indent=2))
         if depth_report is not None:
             print(json.dumps(depth_report, ensure_ascii=False, indent=2))
+        if policy_report is not None:
+            print(json.dumps(policy_report, ensure_ascii=False, indent=2))
     else:
         print("VALID: manifest, Skill front matter, Catalog inventory, verification mapping, profile registry, and synthetic fixtures")
         if report is not None:
@@ -626,6 +825,8 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(matrix_report, ensure_ascii=False, indent=2))
         if depth_report is not None:
             print(json.dumps(depth_report, ensure_ascii=False, indent=2))
+        if policy_report is not None:
+            print(json.dumps(policy_report, ensure_ascii=False, indent=2))
     return 0 if not findings else 1
 
 

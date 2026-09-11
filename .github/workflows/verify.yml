@@ -25,7 +25,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install "PyYAML>=6.0" "jsonschema>=4.0" "pytest>=8.0"
+      - run: python -m pip install "mcp>=1.27,<2" "PyYAML>=6.0" "jsonschema>=4.0" "pytest>=8.0"
       - run: python -m pytest -q
       - run: python scripts/validate_plugin.py
-      - run: python scripts/validate_plugin.py --catalog-report --verification-report --skill-depth-report
+      - run: python scripts/validate_plugin.py --catalog-report --verification-report --skill-depth-report --mutation-policy-report
+      - run: python scripts/bootstrap_runtime.py
+      - run: python -m pytest -q tests/test_mcp_smoke.py

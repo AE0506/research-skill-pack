@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+RUNTIME="$ROOT/.runtime/bin/python"
+
+if [[ ! -x "$RUNTIME" ]]; then
+  echo "runtime_not_configured: run python3 scripts/bootstrap_runtime.py from the plugin root" >&2
+  exit 78
+fi
+
+exec "$RUNTIME" "$ROOT/scripts/research_state_mcp.py"

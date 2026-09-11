@@ -12,10 +12,11 @@
 cd plugins/research-skill-pack
 python3 -m pytest -q
 python3 scripts/validate_plugin.py
-python3 scripts/validate_plugin.py --catalog-report --verification-report --skill-depth-report
+python3 scripts/validate_plugin.py --catalog-report --verification-report --skill-depth-report --mutation-policy-report
+python3 scripts/bootstrap_runtime.py
 ```
 
-这会验证插件清单、175 张 Skill 操作卡、合成项目 fixture、项目契约，以及 Catalog、旧设计 ID 映射、Profile Registry、验证矩阵和 Skill 目录的严格一致性；不调用模型、不联网、不读取原始数据，也不代表真实研究项目已端到端验证。`--skill-depth-report` 只报告每张操作卡的结构化完整性，不把说明书长度说成模型行为验证。具体标准见 [Skill 操作深度标准](../../docs/skill-depth-standard-v0.2.md)。
+这会验证插件清单、175 张 Skill 操作卡、合成项目 fixture、项目契约，以及 Catalog、旧设计 ID 映射、Profile Registry、验证矩阵、写入策略和 Skill 目录的严格一致性；不调用模型、不联网、不读取原始数据，也不代表真实研究项目已端到端验证。`--skill-depth-report` 只报告每张操作卡的结构化完整性，`--mutation-policy-report` 只报告本地 MCP 正常写入路径的覆盖，二者都不把说明书或收据说成模型行为验证。随后运行 `bootstrap_runtime.py` 才会创建本机 MCP 隔离运行环境；完整边界见 [受控写入关卡](../../docs/runtime-write-gate.md)。
 
 ## 授权与 Beta 边界
 

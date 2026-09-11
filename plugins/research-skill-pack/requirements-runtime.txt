@@ -1,0 +1,4 @@
+# Locked local-only runtime dependencies for the research-state MCP server.
+mcp==1.27.0
+PyYAML==6.0.3
+jsonschema==4.26.0

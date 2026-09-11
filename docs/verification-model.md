@@ -8,6 +8,8 @@
 | `deterministic_contract` | 8 | 本地 artifact、状态闸门、时间线或原始数据隔离规则 | LLM 判断质量、研究结论 |
 | `manual_pilot` | 7 | 真实匿名项目中经人工确认的核心流程步骤 | 外部来源真实性、投稿成功或普遍适用性 |
 
+MCP 事务层位于 `deterministic_contract` 的补充位置：它检验已声明的本地写入、revision、状态机与收据链，而不是新增一组模型行为分数。请参阅[受控写入关卡](runtime-write-gate.md)。
+
 运行：
 
 ```bash

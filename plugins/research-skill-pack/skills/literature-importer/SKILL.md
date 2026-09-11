@@ -108,3 +108,12 @@ source_record:
 - `literature-importer` 是否仅处理已声明的输入，并让 `source_record` 可以回到具体的输入定位？
 - `identity-recorded` 是否有明确的 `pass`、`requires_confirmation` 或 `blocked` 结果，而不是被隐含跳过？
 - 本次记录是否保留了证据限制、未决项与下游影响，且没有把草稿或模型推断升级为事实？
+
+## 规范化写入
+
+- **策略：**`canonical_writer`。本 Skill 的唯一 canonical 权限来自 [规范化写入策略表](../../shared/canonical-mutation-policy-v0.2.yaml)：artifact 为 `source`；状态迁移为 无独立状态迁移。不按名称猜测或扩大权限。
+- **开始前：**先调用 `inspect_research_project`，读取 `mutation_revision`、现有 artifact、状态闸门与未收敛收据；若状态为 `blocked`，先说明恢复条件。
+- **预检：**构造一次变更请求（`request_id`、`expected_mutation_revision`、`origin_skill_id: literature-importer`、artifact 和/或状态迁移原因），调用 `validate_canonical_change`。预检失败时不写 `.research/`。
+- **提交：**仅当预检为 `ready` 时，以未改动的同一请求调用 `commit_canonical_change`；不得直接覆写 `project.yaml` 或已有 artifact。替代产物必须使用新 ID 和 `supersedes`。
+- **交接：**只在 MCP 返回 `receipt_id` 后向下游报告 canonical 变更；返回 `blocked`、`already_committed` 或冲突时保留原因、收据/请求 ID 和下一步。
+- **边界：**该关卡约束正常插件路径并留下本地收据，不能阻止用户或终端绕过文件系统；无收据写入在试跑审计中不可复核。

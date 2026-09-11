@@ -20,6 +20,7 @@ from typing import Any
 import yaml
 
 import research_contract
+import research_state
 
 
 REQUIRED_STEPS = {
@@ -124,6 +125,8 @@ def audit_pilot(project_root: Path, attestation_path: Path) -> tuple[dict[str, A
     findings.extend(_attestation_findings(attestation))
     contract_findings = research_contract.validate_project(project_root)
     findings.extend(Finding(f"contract_{item.code}", item.message) for item in contract_findings)
+    receipts, receipt_findings = research_state.validate_receipt_chain(project_root)
+    findings.extend(Finding(f"receipt_{item['code']}", item["message"]) for item in receipt_findings)
 
     project_path = project_root / ".research/project.yaml"
     artifacts: list[dict[str, Any]] = []
@@ -173,6 +176,22 @@ def audit_pilot(project_root: Path, attestation_path: Path) -> tuple[dict[str, A
     if not confirmed_ids.intersection(actual_confirmed_ids):
         findings.append(Finding("confirmation_not_traceable", "at least one attested confirmation must match a confirmed project artifact"))
 
+    if not receipts:
+        findings.append(Finding("missing_receipt_chain", "pilot requires MCP receipts for its canonical workflow"))
+    receipt_artifact_ids = {
+        receipt.get("artifact", {}).get("id")
+        for receipt in receipts
+        if isinstance(receipt.get("artifact"), dict) and isinstance(receipt["artifact"].get("id"), str)
+    }
+    required_artifact_ids = {
+        artifact["id"]
+        for artifact in artifacts
+        if artifact.get("type") in REQUIRED_ARTIFACTS
+    }
+    missing_receipts = sorted(required_artifact_ids - receipt_artifact_ids)
+    if missing_receipts:
+        findings.append(Finding("missing_artifact_receipt", f"pilot required artifacts lack MCP receipts: {', '.join(missing_receipts)}"))
+
     command_evidence = [
         {"name": entry.get("name"), "exit_code": entry.get("exit_code")}
         for entry in attestation.get("commands", [])
@@ -183,6 +202,15 @@ def audit_pilot(project_root: Path, attestation_path: Path) -> tuple[dict[str, A
         for entry in attestation.get("human_confirmations", [])
         if isinstance(entry, dict) and set(entry).issubset(CONFIRMATION_KEYS)
     ]
+    receipt_evidence = [
+        {
+            "receipt_id": receipt.get("receipt_id"),
+            "artifact_id": receipt.get("artifact", {}).get("id") if isinstance(receipt.get("artifact"), dict) else None,
+            "origin_skill_id": receipt.get("origin_skill_id"),
+            "mutation_revision": receipt.get("mutation_revision"),
+        }
+        for receipt in receipts
+    ]
     report = {
         "report_schema_version": "0.2",
         "status": "completed_limited" if not findings else "blocked",
@@ -191,6 +219,7 @@ def audit_pilot(project_root: Path, attestation_path: Path) -> tuple[dict[str, A
         "artifacts": artifacts,
         "command_evidence": command_evidence,
         "human_confirmations": confirmation_evidence,
+        "receipts": receipt_evidence,
         "finding_codes": sorted({finding.code for finding in findings}),
     }
     return report, findings

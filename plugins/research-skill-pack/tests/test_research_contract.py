@@ -14,6 +14,7 @@ sys.path.insert(0, str(PLUGIN_ROOT / "scripts"))
 import research_contract as contract  # noqa: E402
 import validate_plugin  # noqa: E402
 import pilot_audit  # noqa: E402
+import research_state  # noqa: E402
 
 
 FIXTURE = PLUGIN_ROOT / "fixtures" / "valid-project"
@@ -459,18 +460,65 @@ def completed_pilot_attestation() -> dict:
 
 def pilot_project_with_gap_card(tmp_path: Path) -> Path:
     project = copied_v02_project(tmp_path)
-    gap_card = {
-        "schema_version": "0.2", "id": "gap-card-001", "type": "gap_card", "version": 1,
-        "created_at": "2026-09-10T09:30:00Z", "created_by": "skill", "status": "draft",
-        "depends_on": ["context-brief-001"], "supersedes": None, "change_reason": "记录可复核的研究空白",
-        "provenance": "project_generated", "verification_status": "ai_extracted", "manuscript_eligibility": "not_eligible",
-    }
-    gap_path = project / ".research/artifacts/gap-card-001.yaml"
-    write_yaml(gap_path, gap_card)
     project_path = project / ".research/project.yaml"
     manifest = load_yaml(project_path)
-    manifest["artifact_index"].append({key: gap_card[key] for key in ("id", "type", "version", "status", "created_at", "created_by", "depends_on", "supersedes", "change_reason")} | {"path": "artifacts/gap-card-001.yaml"})
+    manifest.update({
+        "current_state": "intake_draft",
+        "write_sequence": 0,
+        "mutation_revision": 0,
+        "state_history": [manifest["state_history"][0]],
+        "artifact_index": [],
+        "timeline": {
+            "contract_status": "needs_baseline",
+            "last_checked_at": "2026-09-10T08:00:00Z",
+            "active_timeline_artifact_id": None,
+            "timeline_health": "unknown",
+        },
+    })
     write_yaml(project_path, manifest)
+    for path in (project / ".research/artifacts").glob("*.yaml"):
+        path.unlink()
+
+    def artifact(artifact_id: str, artifact_type: str, *, status: str = "draft", depends_on: list[str] | None = None, **extra: object) -> dict:
+        return {
+            "schema_version": "0.2", "id": artifact_id, "type": artifact_type, "version": 1,
+            "created_at": "2026-09-10T08:20:00Z", "created_by": "skill", "status": status,
+            "depends_on": depends_on or [], "supersedes": None, "change_reason": "试跑审计测试",
+            "provenance": "project_generated", "verification_status": "ai_extracted", "manuscript_eligibility": "not_eligible",
+        } | extra
+
+    def commit(request_id: str, revision: int, origin: str, artifact_value: dict | None = None, target: str | None = None) -> None:
+        request: dict = {"request_id": request_id, "expected_mutation_revision": revision, "origin_skill_id": origin}
+        if artifact_value is not None:
+            request["artifact"] = artifact_value
+        if target is not None:
+            request.update({"target_state": target, "state_reason": "试跑状态迁移"})
+        assert research_state.commit_canonical_change(project, request)["status"] == "committed"
+
+    commit("pilot-context-001", 0, "context-brief-generator", artifact(
+        "context-brief-001", "context_brief", status="confirmed",
+        confirmation={"confirmed_by": "user", "confirmed_at": "2026-09-10T08:30:00Z"},
+    ))
+    commit("pilot-timeline-001", 1, "timeline-baseline-builder", artifact(
+        "timeline-baseline-001", "timeline_baseline", status="confirmed", depends_on=["context-brief-001"],
+        confirmation={"confirmed_by": "user", "confirmed_at": "2026-09-10T08:31:00Z"},
+        timeline={
+            "final_submission_date": "2026-12-20",
+            "hard_deadlines": [{"id": "final-submission", "label": "最终提交", "date": "2026-12-20", "kind": "final_submission"}],
+            "weekly_capacity_hours": 10,
+        },
+    ))
+    commit("pilot-confirm-intake-001", 2, "context-confirmation-gate", target="intake_confirmed")
+    commit("pilot-topic-001", 3, "topic-feasibility-analyzer", artifact(
+        "topic-assessment-001", "topic_assessment", depends_on=["context-brief-001"],
+    ), "topic_assessed")
+    commit("pilot-gap-001", 4, "gap-card-builder", artifact(
+        "gap-card-001", "gap_card", depends_on=["topic-assessment-001"],
+    ), "gap_ready")
+    commit("pilot-board-001", 5, "review-board-decision", artifact(
+        "board-decision-001", "board_decision", status="confirmed", depends_on=["gap-card-001"], decision="GO",
+        confirmation={"confirmed_by": "user", "confirmed_at": "2026-09-10T10:00:00Z"},
+    ), "board_decided")
     assert contract.validate_project(project) == []
     return project
 
@@ -484,6 +532,7 @@ def test_pilot_audit_outputs_only_redacted_completed_report(tmp_path: Path) -> N
     assert report["status"] == "completed_limited"
     assert report["redacted"] is True
     assert "title" not in report
+    assert len(report["receipts"]) == 6
     assert {artifact["type"] for artifact in report["artifacts"]}.issuperset({"context_brief", "timeline_baseline", "gap_card", "board_decision"})
 
 
@@ -496,6 +545,16 @@ def test_pilot_audit_blocks_sensitive_or_unconfirmed_attestation(tmp_path: Path)
     report, findings = pilot_audit.audit_pilot(project, attestation_path)
     assert report["status"] == "blocked"
     assert {item.code for item in findings}.issuperset({"sensitive_attestation_field", "authorization_missing"})
+
+
+def test_pilot_audit_blocks_a_required_artifact_without_a_receipt(tmp_path: Path) -> None:
+    project = pilot_project_with_gap_card(tmp_path)
+    (project / ".research/receipts/receipt-pilot-gap-001.json").unlink()
+    attestation_path = tmp_path / "attestation.yaml"
+    write_yaml(attestation_path, completed_pilot_attestation())
+    report, findings = pilot_audit.audit_pilot(project, attestation_path)
+    assert report["status"] == "blocked"
+    assert {item.code for item in findings}.issuperset({"receipt_receipt_revision_gap", "missing_artifact_receipt"})
 
 
 def test_pilot_audit_cli_writes_new_redacted_report(tmp_path: Path) -> None:

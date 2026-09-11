@@ -571,12 +571,15 @@ No Verified Manuscript, No Submission.
 git clone https://github.com/AE0506/research-skill-pack.git
 cd research-skill-pack
 
+# 为本地 MCP 写入关卡创建隔离运行环境；首次或更新后均需执行
+python3 plugins/research-skill-pack/scripts/bootstrap_runtime.py
+
 codex plugin marketplace add "$PWD"
 codex plugin add research-skill-pack@research-local
 codex plugin list
 ```
 
-以上命令已按当前 Codex CLI 的 `plugin` 子命令核对；最后一行应显示 `research-skill-pack@research-local` 为 `installed, enabled`。安装只验证插件被发现和启用，不等同于模型在真实论文项目中的端到端效果验证。
+以上命令已按当前 Codex CLI 的 `plugin` 子命令核对；最后一行应显示 `research-skill-pack@research-local` 为 `installed, enabled`。初始化命令创建 Git 忽略的隔离依赖环境，插件缓存会随安装复制它；若运行时缺失，MCP 服务会明确返回 `runtime_not_configured`，不会退化为直接写入。安装与本地 MCP 工具发现只验证插件可被发现、启用和启动，不等同于模型在真实论文项目中的端到端效果验证。
 
 重启或新建 Codex 对话后：
 
@@ -622,14 +625,14 @@ plugins/research-skill-pack/
 ├── .codex-plugin/plugin.json   # 插件清单
 ├── skills/                     # 总入口、宏观 Skill 与 170+ 细粒度工作单元
 ├── shared/                     # 项目 schema、Profile Registry、Catalog、验证矩阵与共享契约
-├── scripts/                    # 校验、迁移、私有试跑审计与本地检查工具
+├── scripts/                    # 校验、迁移、MCP 写入关卡、私有试跑审计与本地检查工具
 ├── fixtures/                   # 不可用于真实研究的合成测试项目
 └── tests/                      # 项目契约、闸门与禁止行为测试
 ```
 
 ## 验证与贡献
 
-本仓库包含针对 schema、artifact、状态闸门、迁移、时间线与安全边界的可执行测试。`validate_plugin.py` 还会校验插件清单、所有 Skill 的可发现元数据、175 条 Catalog 与目录的严格一致性、172 条兼容映射、Profile Registry、175 张逐项操作深度卡和两套合成 fixtures。每张操作卡镜像自己的输入、输出、闸门与安全规则，并提供分步协议、记录模板、失败分支和最小情境演练；[深度报告](docs/skill-depth-standard-v0.2.md)只检查这些说明是否完整，不把它说成模型行为测试。`verification-matrix-v0.2.yaml` 为 175 条验收 ID 提供唯一验证路径，但明确区分结构、确定性契约与人工试跑，不把它们混为模型行为测试。合成 fixtures 仅用于验证本地契约，绝不能进入真实论文或作为研究数据。
+本仓库包含针对 schema、artifact、状态闸门、迁移、时间线与安全边界的可执行测试。`validate_plugin.py` 还会校验插件清单、所有 Skill 的可发现元数据、175 条 Catalog 与目录的严格一致性、172 条兼容映射、Profile Registry、175 张逐项操作深度卡、写入策略和两套合成 fixtures。每张操作卡镜像自己的输入、输出、闸门与安全规则，并提供分步协议、记录模板、失败分支和最小情境演练；[深度报告](docs/skill-depth-standard-v0.2.md)只检查这些说明是否完整，不把它说成模型行为测试。`verification-matrix-v0.2.yaml` 为 175 条验收 ID 提供唯一验证路径；MCP 写入策略则为 175 个 Skill 指定只读、编排或写入权限，并为 29 种 canonical artifact 与 12 条正常状态路径提供确定性收据。二者都不等同于模型行为测试。合成 fixtures 仅用于验证本地契约，绝不能进入真实论文或作为研究数据。
 
 ```bash
 cd plugins/research-skill-pack
@@ -638,11 +641,12 @@ python3 scripts/validate_plugin.py
 python3 scripts/validate_plugin.py --catalog-report
 python3 scripts/validate_plugin.py --verification-report
 python3 scripts/validate_plugin.py --skill-depth-report
+python3 scripts/validate_plugin.py --mutation-policy-report
 ```
 
 ### 已验证
 
-插件本地发现/启用、结构校验、项目契约测试，以及 Catalog/目录/兼容映射、Profile Registry 和逐项验证路径的一致性；这些检查均为本地、非联网、非模型调用验证。每种验证实际能证明什么，见 [验证模型](docs/verification-model.md)。
+插件本地发现/启用、MCP 工具发现、合成项目提交/收据、结构校验、项目契约测试，以及 Catalog/目录/兼容映射、Profile Registry、写入策略和逐项验证路径的一致性；这些检查均为本地、非联网、非模型调用验证。每种验证实际能证明什么，见 [验证模型](docs/verification-model.md) 与 [受控写入关卡](docs/runtime-write-gate.md)。
 
 ### 尚未验证
 

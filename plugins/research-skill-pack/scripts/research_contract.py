@@ -389,6 +389,7 @@ def migrate_v01_project(source_root: Path, output_root: Path, migrated_at: str |
     migrated["schema_version"] = "0.2"
     migrated["timeline"] = {"contract_status": "needs_baseline", "last_checked_at": stamp, "active_timeline_artifact_id": None, "timeline_health": "unknown"}
     migrated["migration"] = {"source_schema_version": "0.1", "migrated_at": stamp, "migration_status": "needs_timeline_baseline", "prior_current_state": prior_state}
+    migrated["mutation_revision"] = 0
     migrated["write_sequence"] = migrated.get("write_sequence", 0) + 1
     migrated["current_state"] = "blocked"
     migrated["state_history"].append({"sequence": migrated["write_sequence"], "state": "blocked", "at": stamp, "changed_by": "migration", "reason": "v0.2 requires a confirmed Timeline Baseline before work can continue"})

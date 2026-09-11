@@ -13,6 +13,7 @@
     "current_state": {"$ref": "#/$defs/state"},
     "writer_mode": {"const": "single_user_serial"},
     "write_sequence": {"type": "integer", "minimum": 0},
+    "mutation_revision": {"type": "integer", "minimum": 0},
     "artifact_index": {"type": "array", "items": {"$ref": "#/$defs/artifactIndex"}},
     "state_history": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/stateHistory"}},
     "user_overrides": {"type": "array", "items": {"$ref": "#/$defs/userOverride"}},
@@ -21,7 +22,7 @@
     "timeline": {"$ref": "#/$defs/timelineProject"},
     "migration": {"$ref": "#/$defs/migration"}
   },
-  "allOf": [{"if": {"properties": {"schema_version": {"const": "0.2"}}}, "then": {"required": ["timeline"]}}],
+  "allOf": [{"if": {"properties": {"schema_version": {"const": "0.2"}}}, "then": {"required": ["timeline", "mutation_revision"]}}],
   "$defs": {
     "timestamp": {"type": "string", "format": "date-time"},
     "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,95}$"},

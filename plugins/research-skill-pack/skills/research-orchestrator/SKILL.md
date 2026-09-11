@@ -132,3 +132,12 @@ route_advice:
 - `research-orchestrator` 是否仅处理已声明的输入，并让 `route_advice` 可以回到具体的输入定位？
 - `state-aware-routing` 是否有明确的 `pass`、`requires_confirmation` 或 `blocked` 结果，而不是被隐含跳过？
 - 本次记录是否保留了证据限制、未决项与下游影响，且没有把草稿或模型推断升级为事实？
+
+## 规范化写入
+
+- **策略：**`orchestrator`。本 Skill 不拥有 `.research/` 的写权限；唯一权限来源是 [规范化写入策略表](../../shared/canonical-mutation-policy-v0.2.yaml) 与 [规范化路由表](../../shared/canonical-route-map-v0.2.yaml)。
+- **每轮开始：**调用 `inspect_research_project`，读取状态、`mutation_revision`、闸门、收据完整性和 `next_routes`，不得只依赖对话记忆推断项目状态。
+- **路由：**仅从 `next_routes` 中选择当前正常状态的下游工作；`PIVOT`、`KILL`、`blocked` 必须保留为显式结果，不以“继续推进”掩盖。
+- **受控变更：**需要 canonical artifact 或状态迁移时，交接给策略表中的 `canonical_writer`；该 Skill 必须先调用 `validate_canonical_change` 再调用 `commit_canonical_change`。
+- **完成条件：**编排结果必须记录收据 ID；没有收据时只能称为建议、草稿或 `blocked`，不能称为项目状态已更新。
+- **边界：**MCP 约束正常插件工作流并可审计，但不是操作系统级阻断；外部直接写文件会在后续收据校验中显示为不可复核。

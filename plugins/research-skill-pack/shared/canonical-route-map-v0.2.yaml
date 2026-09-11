@@ -1,0 +1,77 @@
+route_version: 0.2.0-beta
+purpose: >-
+  Explicit, auditable routes for canonical lifecycle transitions. The map limits
+  state progression; it does not replace research judgement or guarantee model routing quality.
+routes:
+  - id: confirm-intake
+    from_state: intake_draft
+    to_state: intake_confirmed
+    required_skill_ids: [context-brief-generator, timeline-baseline-builder, context-confirmation-gate]
+    required_artifact_types: [context_brief, timeline_baseline]
+    transition_owner: context-confirmation-gate
+  - id: assess-topic
+    from_state: intake_confirmed
+    to_state: topic_assessed
+    required_skill_ids: [topic-feasibility-analyzer]
+    required_artifact_types: [topic_assessment]
+    transition_owner: topic-feasibility-analyzer
+  - id: prepare-gap
+    from_state: topic_assessed
+    to_state: gap_ready
+    required_skill_ids: [literature-importer, gap-card-builder]
+    required_artifact_types: [gap_card]
+    transition_owner: gap-card-builder
+  - id: decide-board
+    from_state: gap_ready
+    to_state: board_decided
+    required_skill_ids: [research-review-board, review-board-decision]
+    required_artifact_types: [board_decision]
+    transition_owner: review-board-decision
+  - id: lock-design
+    from_state: board_decided
+    to_state: design_ready
+    required_skill_ids: [research-protocol-builder, milestone-plan-builder]
+    required_artifact_types: [research_protocol, execution_timeline]
+    transition_owner: research-protocol-builder
+  - id: verify-evidence
+    from_state: design_ready
+    to_state: evidence_ready
+    required_skill_ids: [analysis-run-registrar, verified-evidence-package-builder]
+    required_artifact_types: [verified_evidence_package]
+    transition_owner: verified-evidence-package-builder
+  - id: create-blueprint
+    from_state: evidence_ready
+    to_state: blueprint_ready
+    required_skill_ids: [paper-architect]
+    required_artifact_types: [manuscript_blueprint]
+    transition_owner: paper-architect
+  - id: audit-manuscript
+    from_state: blueprint_ready
+    to_state: manuscript_audited
+    required_skill_ids: [academic-originality, citation-evidence-guard]
+    required_artifact_types: [originality_report, citation_audit]
+    transition_owner: citation-evidence-guard
+  - id: prepare-review
+    from_state: manuscript_audited
+    to_state: review_ready
+    required_skill_ids: [reviewer-simulator]
+    required_artifact_types: [review_report]
+    transition_owner: reviewer-simulator
+  - id: assess-venue
+    from_state: review_ready
+    to_state: venue_ready
+    required_skill_ids: [journal-venue-matcher]
+    required_artifact_types: [venue_assessment]
+    transition_owner: journal-venue-matcher
+  - id: prepare-submission
+    from_state: venue_ready
+    to_state: submission_ready
+    required_skill_ids: [deadline-readiness-gate, submission-revision-os]
+    required_artifact_types: [deadline_readiness_report, submission_package]
+    transition_owner: submission-revision-os
+  - id: archive-project
+    from_state: submission_ready
+    to_state: archived
+    required_skill_ids: [research-archive-builder]
+    required_artifact_types: [archive_manifest]
+    transition_owner: research-archive-builder
