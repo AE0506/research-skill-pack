@@ -333,7 +333,7 @@ _图 4：科研技能包架构。_
   </tbody>
 </table>
 
-设计阶段的“概念—子流程—预期输入—输出—状态闸门—验收编号”映射在 [Skill Catalog](plugins/research-skill-pack/shared/skill-catalog-v0.2.yaml) 中。这里的验收编号是需求追踪标签，**不是**逐项可执行测试的名称；当前实现与 Catalog 的逐项对齐仍在整理中，可用校验命令查看差异。
+设计阶段的“概念—子流程—预期输入—输出—状态闸门—验收编号”映射在 [Skill Catalog](plugins/research-skill-pack/shared/skill-catalog-v0.2.yaml) 中。Catalog 的 `id` 以实际安装的 Skill 目录名为准；172 个旧设计 ID 保留在 `legacy_design_ids` 中用于兼容追踪。验收编号是需求追踪标签，**不是**逐项可执行测试的名称。校验器会强制 Catalog、目录和映射表三者一致，并在报告中列出差异。
 
 ---
 
@@ -606,17 +606,18 @@ codex plugin list
 
 ## 现在的版本
 
-当前公开的是 **v0.2.0**：它完成了细粒度 Skill Catalog、项目契约、时间线系统、版本化 artifact、合成 fixture 与校验测试，并将 12 步科研链路组织为可安装的本地插件包。
+当前公开的是 **v0.2.0 Beta**：它完成了细粒度 Skill Catalog、项目契约、时间线系统、版本化 artifact、合成 fixture 与本地校验测试，并将 12 步科研链路组织为可安装的本地插件包。它的发布目标是邀请少量用户在受限边界内试用，而不是生产级科研或投稿系统。
 
-它更像一套可以持续演化的“科研工作单元操作系统”，而不是一个一次性论文生成器。未来可以为不同学科、实验模式和机构规范增加新的 profile 与 provider，但这些扩展必须继续遵守同一套证据、隐私、确认与版本化原则。
+它更像一套可以持续演化的“科研工作单元操作系统”，而不是一个一次性论文生成器。Beta 仅支持 `zh-undergrad-information-management-empirical`，由 schema 强制限制；收集到第二类真实需求后，才会设计带迁移方案的 Profile Registry，而不是提前放宽现有约束。
 
 ### 授权状态
 
-当前仓库尚未附带开源许可证。阅读源码不等于获得复制、修改或分发授权；在作者加入明确许可证前，请先取得著作权人的许可。许可证类型会影响真实用户和贡献者的权利，因此不会由工具擅自替作者决定。
+本仓库采用 [MIT License](LICENSE)。它允许使用、复制、修改和分发代码；但不提供任何研究结论、数据合规、来源真实性、模型输出质量、期刊要求或投稿结果的担保。
 
 ## 项目结构
 
 ```text
+docs/                           # Beta 验证状态、试跑协议与脱敏报告模板
 plugins/research-skill-pack/
 ├── .codex-plugin/plugin.json   # 插件清单
 ├── skills/                     # 总入口、宏观 Skill 与 170+ 细粒度工作单元
@@ -628,7 +629,7 @@ plugins/research-skill-pack/
 
 ## 验证与贡献
 
-本仓库包含针对 schema、artifact、状态闸门、迁移、时间线与安全边界的可执行测试。`validate_plugin.py` 还会校验插件清单、所有 Skill 的可发现元数据和两套合成 fixtures。合成 fixtures 仅用于验证本地契约，绝不能进入真实论文或作为研究数据。
+本仓库包含针对 schema、artifact、状态闸门、迁移、时间线与安全边界的可执行测试。`validate_plugin.py` 还会校验插件清单、所有 Skill 的可发现元数据、175 条 Catalog 与目录的严格一致性、172 条兼容映射、31 条受限短工作流和两套合成 fixtures。合成 fixtures 仅用于验证本地契约，绝不能进入真实论文或作为研究数据。
 
 ```bash
 cd plugins/research-skill-pack
@@ -637,7 +638,19 @@ python3 scripts/validate_plugin.py
 python3 scripts/validate_plugin.py --catalog-report
 ```
 
-目前已验证：插件本地发现/启用、结构校验和项目契约测试。尚未验证：用真实研究资料完成一次人工复核的全流程，以及 Catalog 每个设计条目对应一个独立自动化测试。后两项在完成前不应被表述为已具备的能力。
+### 已验证
+
+插件本地发现/启用、结构校验、项目契约测试，以及 Catalog/目录/兼容映射的一致性；这些检查均为本地、非联网、非模型调用验证。
+
+### 尚未验证
+
+一次已获授权的匿名真实试跑、真实对话的模型输出质量、外部来源真实性与投稿流程尚未验证。Catalog 的 `validation` 字段明确区分结构检查、行为测试和需要人工试跑的路径，不应被解读为逐项功能测试完成。
+
+### 不会做
+
+不联网核验来源、不默认读取原始敏感数据、不登录或提交外部系统、不伪造证据或结果、不提供规避学术检测的能力。
+
+试跑必须在仓库外的独立本地目录进行，并按 [匿名真实试跑协议](docs/beta-pilot-protocol.md) 与 [脱敏报告模板](docs/beta-pilot-report-template.md) 留下可公开的最小证据。完整边界见 [Beta 验证状态](docs/validation-status.md)。
 
 欢迎通过 Issue 讨论新的学科 profile、研究工作单元与文档改进；任何贡献都不能削弱真实数据、来源核验、用户确认与作者责任这四条底线。
 

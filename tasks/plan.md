@@ -1,4 +1,6 @@
-# 实施计划：科研论文 Skill Pack
+# [归档] 实施计划：科研论文 Skill Pack
+
+> 这是早期开发设计记录，不代表当前已交付能力或 v0.2 Beta 发布承诺。请以 [Beta 验证状态](../docs/validation-status.md) 为准。
 
 ## 目标
 
@@ -156,4 +158,3 @@ Skill package conventions + shared project schema
 - 目标 ChatGPT/Codex 环境中 Skill 的实际安装与发现路径、是否支持本地 Skill 目录。
 - 可合法稳定调用的文献元数据、全文、引用与撤稿数据源；其 API、授权、限额和使用条款。
 - 第一版优先支持的论文类型和学科 profile；默认可先用“中文本科毕业论文 / 信息管理与社科实证”作为演示 fixture，但不应写死为通用规则。
-

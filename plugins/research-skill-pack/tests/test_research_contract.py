@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import shutil
 import sys
+import json
 from pathlib import Path
 
 import yaml
@@ -281,8 +282,59 @@ def test_plugin_package_structure_and_synthetic_fixtures_validate() -> None:
     assert validate_plugin.validate_plugin() == []
 
 
+def test_beta_profile_remains_explicitly_scoped() -> None:
+    schema = json.loads((PLUGIN_ROOT / "shared/project-schema.json").read_text(encoding="utf-8"))
+    assert schema["properties"]["profile"]["const"] == "zh-undergrad-information-management-empirical"
+
+
 def test_plugin_validator_rejects_missing_skill_front_matter(tmp_path: Path) -> None:
     plugin_root = tmp_path / "plugin"
     shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
     (plugin_root / "skills/research-radar/SKILL.md").write_text("# missing metadata\n", encoding="utf-8")
     assert "invalid_skill_front_matter" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_catalog_matches_every_installed_skill_and_preserves_legacy_design_ids() -> None:
+    report = validate_plugin.catalog_report()
+    assert report["catalog_skill_count"] == 175
+    assert report["implemented_skill_count"] == 175
+    assert report["legacy_design_id_count"] == 172
+    assert report["bounded_workflow_skill_count"] == 31
+    assert report["strict_match"] is True
+    assert report["catalog_only"] == []
+    assert report["implementation_only"] == []
+    assert report["missing_legacy_mappings"] == []
+    assert report["unexpected_legacy_mappings"] == []
+    assert report["misdirected_legacy_mappings"] == []
+    assert report["duplicate_legacy_mapping_targets"] == []
+
+
+def test_plugin_validator_rejects_catalog_mapping_drift(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    mapping_path = plugin_root / "shared/legacy-skill-map-v0.2.yaml"
+    mapping = load_yaml(mapping_path)
+    mapping["legacy_to_canonical"].pop("analysis-run-register")
+    write_yaml(mapping_path, mapping)
+    assert "legacy_mapping_coverage" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_plugin_validator_rejects_missing_catalog_validation_reference(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    catalog_path = plugin_root / "shared/skill-catalog-v0.2.yaml"
+    catalog = load_yaml(catalog_path)
+    catalog["packs"][0]["skills"][0].pop("validation")
+    write_yaml(catalog_path, catalog)
+    assert "catalog_validation_level" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
+
+
+def test_plugin_validator_rejects_incomplete_bounded_beta_workflow(tmp_path: Path) -> None:
+    plugin_root = tmp_path / "plugin"
+    shutil.copytree(PLUGIN_ROOT, plugin_root, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    skill_path = plugin_root / "skills/article-pattern-fit/SKILL.md"
+    skill_path.write_text(
+        skill_path.read_text(encoding="utf-8").replace("## 安全边界", "## 约束"),
+        encoding="utf-8",
+    )
+    assert "incomplete_beta_workflow" in {item.code for item in validate_plugin.validate_plugin(plugin_root)}
