@@ -4,6 +4,14 @@
 
 Research Skill Pack 是一个运行在 **ChatGPT Desktop Codex** 中的个人本地插件。它不是“输入题目，生成一篇论文”的工具；它把一篇论文拆回它本来就该有的样子：一连串需要人确认、需要证据支撑、需要经得起追问的研究决定。
 
+> **当前状态：v0.2 Beta。** 面向 `zh-undergrad-information-management-empirical` 这一种受支持 Profile；适合在受限边界内试用，不应被当作生产级科研、外部事实核验或投稿系统。
+
+| 现在可以核对的 | 仍不能声称的 | 明确不做 |
+| --- | --- | --- |
+| 175 个 Skill 与 Catalog/验证映射/写入策略严格一致；本地 MCP 对 canonical `.research/` 写入执行预检、提交与收据审计 | 已获授权的匿名真实试跑、模型在真实对话中的遵守情况、研究结论与外部来源真实性 | 不联网核验来源；不读取原始敏感数据；不登录、上传或提交外部系统；不伪造证据或结果 |
+
+本地结构与事务验证、人工试跑和外部事实真实性是不同层级的证据。完整边界见 [Beta 验证状态](docs/validation-status.md)、[验证模型](docs/verification-model.md) 与 [受控写入关卡](docs/runtime-write-gate.md)。
+
 ![科研技能包全景图：从理解研究者开始，经选题判断、证据建立、论证写作和审计，最终归档研究项目。](assets/diagram-sources/01-research-overview.svg)
 
 _图 1：科研技能包全景。_
@@ -609,7 +617,7 @@ codex plugin list
 
 ## 现在的版本
 
-当前公开的是 **v0.2.0 Beta**：它完成了细粒度 Skill Catalog、项目契约、时间线系统、版本化 artifact、合成 fixture 与本地校验测试，并将 12 步科研链路组织为可安装的本地插件包。它的发布目标是邀请少量用户在受限边界内试用，而不是生产级科研或投稿系统。
+当前公开的是 **v0.2.0 Beta**：它完成了细粒度 Skill Catalog、项目契约、时间线系统、版本化 artifact、合成 fixture 与本地校验测试，并将 12 步科研链路组织为可安装的本地插件包。对 canonical `.research/` 状态与 artifact 的正常插件写入，`research-state` MCP 会执行“读取状态 → 预检 → 提交 → 收据”流程；收据链可被试跑审计器复核。它的发布目标是邀请少量用户在受限边界内试用，而不是生产级科研或投稿系统。
 
 它更像一套可以持续演化的“科研工作单元操作系统”，而不是一个一次性论文生成器。Beta 仅激活 `zh-undergrad-information-management-empirical`，由受校验的 [Profile Registry](plugins/research-skill-pack/shared/profile-registry-v0.2.json) 驱动；新增 Profile 必须同步更新 schema、迁移说明与测试，不能再修改孤立硬编码。
 
